@@ -41,7 +41,3 @@
   width: min(100%, 110px);
   margin: 48px auto 0;
 }
-
-.btn--square {
-  border-radius: 4px;
-}

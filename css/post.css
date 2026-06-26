@@ -36,7 +36,7 @@
 
 .post-card__title {
   margin: 0 0 12px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .post-card__meta {
@@ -75,16 +75,13 @@
   background-color: #c7c7c7;
   margin: 20px -15px;
 }
-.post-detail__head {
-  
-}
 
 .post-detail__title {
   margin: 0 0 12px;
   font-size: 18px;
 }
 
-.post-detail__meta{
+.post-detail__meta {
   display: flex;
   justify-content: space-between;
 }
@@ -106,10 +103,9 @@
   display: inline-block;
   vertical-align: middle;
   box-sizing: border-box;
-  
   padding: 4px 10px;
-  background-color: tra;
-  color: black;
+  background-color: transparent;
+  color: var(--text);
   font-size: 13px;
   border: 1px solid #b995f6;
   border-radius: 8px;
@@ -156,7 +152,7 @@
 
 .stat-box__label {
   font-size: 14px;
-  font-weight: 700
+  font-weight: 700;
 }
 
 .comment-form {
@@ -167,7 +163,7 @@
 
 .comment-form textarea {
   width: 100%;
-  min-height: 96px;
+  min-height: 120px;
   border: 0;
   padding: 16px;
   resize: vertical;
