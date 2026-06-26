@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원가입 | 아무 말 대잔치</title>
+  <link rel="stylesheet" href="./css/common.css" />
+  <link rel="stylesheet" href="./css/auth.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="icon-button" href="./sign-in.html" aria-label="뒤로가기"><span class="back-icon"></span></a>
+        <a class="site-header__title" href="./posts.html">아무 말 대잔치</a>
+        <div></div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="auth-form" aria-labelledby="sign-up-title">
+        <h1 id="sign-up-title" class="section-title">회원가입</h1>
+        <div class="profile-upload">
+          <label class="profile-upload__label required">프로필 사진</label>
+          <button class="profile-upload__preview" type="button" aria-label="프로필 사진 추가">+</button>
+        </div>
+        <form class="form">
+          <div class="form-group">
+            <label class="label required" for="email">이메일</label>
+            <input class="auth__input" id="email" type="email" placeholder="이메일을 입력하세요" />
+            <p class="helper">* helper text</p>
+          </div>
+          <div class="form-group">
+            <label class="label required" for="password">비밀번호</label>
+            <input class="auth__input" id="password" type="password" placeholder="비밀번호를 입력하세요" />
+            <p class="helper">* helper text</p>
+          </div>
+          <div class="form-group">
+            <label class="label required" for="password-confirm">비밀번호 확인</label>
+            <input class="auth__input" id="password-confirm" type="password" placeholder="비밀번호를 한번 더 입력하세요" />
+            <p class="helper">* helper text</p>
+          </div>
+          <div class="form-group">
+            <label class="label required" for="nickname">닉네임</label>
+            <input class="auth__input" id="nickname" type="text" placeholder="닉네임을 입력하세요" />
+            <p class="helper">* helper text</p>
+          </div>
+          <button class="btn btn--primary btn--wide" type="submit">회원가입</button>
+        </form>
+        <a class="link-button" href="./sign-in.html">로그인하러 가기</a>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

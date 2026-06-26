@@ -1,0 +1,47 @@
+.member-form {
+  width: min(100%, 320px);
+}
+
+.profile-preview {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.profile-preview__label {
+  display: block;
+  width: min(100%, 320px);
+  margin: 0 auto 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-preview__image {
+  width: 112px;
+  height: 112px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, transparent 0 30%, rgba(0,0,0,.35) 31% 100%),
+    #aaa;
+  overflow: hidden;
+}
+
+.readonly-text {
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+
+.member-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.member-actions--withdraw {
+  width: min(100%, 110px);
+  margin: 48px auto 0;
+}
+
+.btn--square {
+  border-radius: 4px;
+}
