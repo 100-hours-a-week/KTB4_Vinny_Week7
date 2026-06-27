@@ -4,7 +4,7 @@
   --text: #111;
   --muted: #777;
   --primary: #7f6aee;
-  --primary-hover: #aca0eb;;
+  --primary-hover: #aca0eb;
   --danger: #ff0000;
   --card: #fff;
   --soft: #eeeeee;
@@ -25,6 +25,10 @@ body {
   color: var(--text);
   font-family: Arial, 'Noto Sans KR', sans-serif;
   background: var(--page-bg);
+}
+
+body.modal-open {
+  overflow: hidden;
 }
 
 button, input, textarea {
@@ -198,6 +202,13 @@ a {
   font-size: 13px;
 }
 
+.input:focus,
+.post__input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
 .post__input,
 .textarea {
   width: 100%;
@@ -242,7 +253,10 @@ a {
   color: #fff;
 }
 
-.btn--primary:not(:disabled):hover { background: var(--primary-hover); }
+
+.btn--primary:not(:disabled):hover {
+  background: var(--primary);
+}
 
 .btn--primary:disabled {
   background: var(--primary-hover);
@@ -296,16 +310,21 @@ a {
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(0,0,0,.35);
+  background: rgba(0,0,0,.5);
   z-index: 50;
 }
 
 .dialog {
   width: min(92vw, 280px);
   padding: 30px 28px 24px;
+  border: 0;
   border-radius: 8px;
   background: #fff;
   text-align: center;
+}
+
+dialog.dialog::backdrop {
+  background: rgba(0,0,0,.5);
 }
 
 .dialog__title {
@@ -323,6 +342,10 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+}
+
+.dialog__actions .btn {
+  min-height: 32px;
 }
 
 @media (max-width: 520px) {

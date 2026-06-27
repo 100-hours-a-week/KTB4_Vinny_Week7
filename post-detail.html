@@ -35,7 +35,11 @@
               </div>
               <div class="post-actions">
                 <a class="small-button" href="./post-edit.html">수정</a>
-                <button class="small-button" type="button">삭제</button>
+                <button
+                  id="post-delete-button"
+                  class="small-button"
+                  type="button"
+                  data-dialog-open="post-delete-dialog">삭제</button>
               </div>
             </div>
           </div>
@@ -46,27 +50,43 @@
         <p class="post-content">자연 속에서는 숲속으로 가서 산책하거나 하늘을 바라보는 아름다움을 느끼곤 합니다. 아니면, 흥미로운 책을 읽거나 새로운 기술을 배우는 것도 즐겁습니다. 다양한 주제의 음악을 듣는 것도 좋아합니다.</p>
 
         <div class="stats" aria-label="게시글 통계">
-          <div class="stat-box">
-            <strong class="stat-box__count">123</strong>
+          <button
+            id="like-button"
+            class="stat-box stat-box--like"
+            type="button"
+            aria-pressed="false">
+            <strong id="like-count" class="stat-box__count" data-count="999">999</strong>
             <span class="stat-box__label">좋아요수</span>
-          </div><div class="stat-box">
-            <strong class="stat-box__count">123</strong>
+          </button><div class="stat-box">
+            <strong id="view-count" class="stat-box__count" data-count="123456">123456</strong>
             <span class="stat-box__label">조회수</span>
           </div><div class="stat-box">
-            <strong class="stat-box__count">123</strong>
+            <strong id="comment-count" class="stat-box__count" data-count="123">123</strong>
             <span class="stat-box__label">댓글</span>
           </div>
         </div>
 
-        <form class="comment-form">
-          <textarea placeholder="댓글을 남겨주세요!"></textarea>
-          <div class="comment-form__footer"><button class="btn btn--primary btn--pill" type="submit">댓글 등록</button></div>
+        <form id="comment-form" class="comment-form">
+          <textarea id="comment-input" placeholder="댓글을 남겨주세요!"></textarea>
+          <div class="comment-form__footer">
+            <button
+              id="comment-submit-button"
+              class="btn btn--primary btn--pill"
+              type="submit"
+              disabled>댓글 등록</button>
+          </div>
         </form>
 
-        <div class="comment-list">
-          <section class="comment-item">
+        <div id="comment-list" class="comment-list">
+          <section class="comment-item" data-comment-id="1">
             <div class="author-line"><span class="tiny-avatar"></span><strong>데미 작성자 1</strong><time>2021-01-01 00:00:00</time></div>
-            <div class="comment-actions"><button class="small-button">수정</button><button class="small-button">삭제</button></div>
+            <div class="comment-actions">
+              <button class="small-button comment-edit-button" type="button">수정</button>
+              <button
+                class="small-button comment-delete-button"
+                type="button"
+                data-dialog-open="comment-delete-dialog">삭제</button>
+            </div>
             <p class="comment-item__body">댓글 내용</p>
           </section>
           <section class="comment-item">
@@ -81,5 +101,47 @@
       </article>
     </main>
   </div>
+
+  <dialog
+    id="post-delete-dialog"
+    class="dialog"
+    aria-labelledby="post-delete-title">
+    <h2 id="post-delete-title" class="dialog__title">게시글을 삭제하시겠습니까?</h2>
+    <p class="dialog__text">삭제한 내용은 복구 할 수 없습니다.</p>
+    <div class="dialog__actions">
+      <button
+        class="btn btn--dark btn--wide btn--rounded"
+        type="button"
+        value="cancel"
+        data-dialog-close>취소</button>
+      <button
+        id="post-delete-confirm-button"
+        class="btn btn--primary btn--wide btn--rounded"
+        type="button"
+        value="confirm">확인</button>
+    </div>
+  </dialog>
+
+  <dialog
+    id="comment-delete-dialog"
+    class="dialog"
+    aria-labelledby="comment-delete-title">
+    <h2 id="comment-delete-title" class="dialog__title">댓글을 삭제하시겠습니까?</h2>
+    <p class="dialog__text">삭제한 내용은 복구 할 수 없습니다.</p>
+    <div class="dialog__actions">
+      <button
+        class="btn btn--dark btn--wide btn--rounded"
+        type="button"
+        value="cancel"
+        data-dialog-close>취소</button>
+      <button
+        id="comment-delete-confirm-button"
+        class="btn btn--primary btn--wide btn--rounded"
+        type="button"
+        value="confirm">확인</button>
+    </div>
+  </dialog>
+
+  <script src="./js/post-detail.js"></script>
 </body>
 </html>

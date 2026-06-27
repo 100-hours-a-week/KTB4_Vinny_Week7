@@ -145,6 +145,18 @@
   padding: 6px 2px;
 }
 
+.stat-box--like {
+  border: 0;
+  background: #d9d9d9;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.stat-box--like.is-liked {
+  background: #aca0eb;
+}
+
 .stat-box__count {
   font-size: 16px;
   font-weight: 700;
