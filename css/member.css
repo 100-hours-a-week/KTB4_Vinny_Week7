@@ -1,5 +1,5 @@
 .member-form {
-  width: min(100%, 320px);
+  width: min(100%, 360px);
 }
 
 .profile-preview {
@@ -9,7 +9,7 @@
 
 .profile-preview__label {
   display: block;
-  width: min(100%, 320px);
+  width: min(100%, 360px);
   margin: 0 auto 12px;
   text-align: left;
   font-size: 12px;

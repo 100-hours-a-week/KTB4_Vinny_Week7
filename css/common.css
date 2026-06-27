@@ -3,8 +3,8 @@
   --line: #8f8f8f;
   --text: #111;
   --muted: #777;
-  --primary: #c2a0fb;
-  --primary-hover: #a57eea;
+  --primary: #7f6aee;
+  --primary-hover: #aca0eb;;
   --danger: #ff0000;
   --card: #fff;
   --soft: #eeeeee;
@@ -167,11 +167,11 @@ a {
 }
 
 .form--narrow {
-  width: min(100%, 320px);
+  width: min(100%, 360px);
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .label {
@@ -217,6 +217,13 @@ a {
   margin: 4px 0 0;
   color: #ff4b4b;
   font-size: 11px;
+  line-height: 14px;
+  height: 16px;
+  visibility: hidden;
+}
+
+.helper--visible {
+  visibility: visible;
 }
 
 .btn {
@@ -235,7 +242,12 @@ a {
   color: #fff;
 }
 
-.btn--primary:hover { background: var(--primary-hover); }
+.btn--primary:not(:disabled):hover { background: var(--primary-hover); }
+
+.btn--primary:disabled {
+  background: var(--primary-hover);
+  cursor: not-allowed;
+}
 
 .btn--dark {
   background: #171717;
