@@ -9,7 +9,7 @@ import {
 import { setHelperText, showToast } from "./utils/ui.js";
 
 const userEditPasswordForm = document.getElementById(
-  "user-edit-password-form"
+  "user-password-edit-form"
 );
 const userEditPassword = document.getElementById("password");
 const passwordHelperText = document.getElementById(
@@ -22,10 +22,10 @@ const confirmPasswordHelperText = document.getElementById(
   "confirm-password-helper-text"
 );
 const userEditPasswordButton = document.getElementById(
-  "user-edit-password-button"
+  "user-password-edit-button"
 );
 const userEditPasswordToast = document.getElementById(
-  "user-edit-password-toast"
+  "user-password-edit-toast"
 );
 
 function getPasswordError() {

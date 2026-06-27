@@ -12,7 +12,7 @@ import {
   showToast
 } from "./utils/ui.js";
 
-const userEditForm = document.getElementById("user-edit-profile-form");
+const userEditForm = document.getElementById("user-profile-edit-form");
 const userEditNickname = document.getElementById("nickname");
 const nicknameHelperText = document.getElementById("nickname-helper-text");
 const userEditButton = document.getElementById("user-edit-button");
