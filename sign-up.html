@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>회원가입 | 아무 말 대잔치</title>
+  <link rel="stylesheet" href="./css/colors.css" />
   <link rel="stylesheet" href="./css/common.css" />
   <link rel="stylesheet" href="./css/auth.css" />
 </head>
@@ -23,7 +24,13 @@
         <div class="profile-upload">
           <label class="profile-upload__label required" for="profile-image">프로필 사진</label>
           <p id="profile-helper-text" class="helper profile-upload__helper"></p>
-          <input id="profile-image" class="profile-upload__input" type="file" accept="image/*" />
+          <input
+            id="profile-image"
+            class="profile-upload__input"
+            type="file"
+            accept="image/*"
+            aria-describedby="profile-helper-text"
+            required />
           <button
             id="profile-image-button"
             class="profile-upload__preview"

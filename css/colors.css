@@ -1,0 +1,33 @@
+:root {
+  --white: #fff;
+  --gray-50: #f4f4f6;
+  --gray-100: #e9e9e9;
+  --gray-200: #e4e4e4;
+  --gray-300: #e1e1e1;
+  --gray-400: #d9d9d9;
+  --gray-500: #cdcdcd;
+  --gray-600: #c7c7c7;
+  --gray-700: #aaa;
+  --gray-800: #333;
+  --gray-900: #111;
+  --purple-300: #b995f6;
+  --purple-400: #aca0eb;
+  --purple-500: #7f6aee;
+  --red-500: #fe2323;
+
+  --color-surface-page: var(--gray-50);
+  --color-surface-default: var(--white);
+  --color-surface-hover: var(--gray-100);
+  --color-surface-muted: var(--gray-200);
+  --color-surface-subtle: var(--gray-300);
+  --color-surface-strong: var(--gray-500);
+  --color-surface-emphasis: var(--gray-700);
+  --color-text-primary: var(--gray-900);
+  --color-border-default: var(--gray-600);
+  --color-border-strong: var(--gray-800);
+  --color-action-primary: var(--purple-500);
+  --color-action-disabled: var(--purple-400);
+  --color-action-border: var(--purple-300);
+  --color-danger: var(--red-500);
+  --color-overlay: rgba(0, 0, 0, .5);
+}

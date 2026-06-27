@@ -57,7 +57,7 @@ function getNicknameError() {
 }
 
 function getProfileImageError() {
-  return profileImageData === "" ? "* 프로필 사진을 추가해주세요." : "";
+  return profileImageData === "" ? "*프로필 사진을 추가해주세요." : "";
 }
 
 function validateEmail() {
@@ -217,4 +217,5 @@ signUpForm.addEventListener("submit", function(event) {
   }
 });
 
+validateProfileImage();
 updateSignUpButtonState();
