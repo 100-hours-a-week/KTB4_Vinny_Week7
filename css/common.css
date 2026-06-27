@@ -136,7 +136,7 @@ a {
   text-align: center;
 }
 
-.profile-menu__item:hover { background: #e2e2e2; }
+.profile-menu__item:hover { background: #e9e9e9; }
 
 .main {
   display: grid;

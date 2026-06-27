@@ -1,0 +1,86 @@
+.user-form {
+  width: min(100%, 360px);
+}
+
+.profile-preview {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.profile-preview__label {
+  display: block;
+  width: min(100%, 360px);
+  margin: 0 auto 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-preview__image {
+  width: 112px;
+  height: 112px;
+  padding: 0;
+  margin: 0 auto;
+  border: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, transparent 0 30%, rgba(0,0,0,.35) 31% 100%),
+    #aaa;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.profile-preview__input {
+  display: none;
+}
+
+.profile-preview__overlay {
+  padding: 6px 16px;
+  border: 2px solid #fff;
+  border-radius: 100px;
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.readonly-text {
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+
+.user-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.user-actions--withdraw {
+  width: min(100%, 110px);
+  margin: 48px auto 0;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 25%;
+  z-index: 10;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: #aca0eb;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

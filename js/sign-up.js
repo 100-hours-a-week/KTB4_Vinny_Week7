@@ -75,7 +75,7 @@ function getPasswordError() {
     signUpConfirmPassword.value !== "" &&
     password !== signUpConfirmPassword.value
   ) {
-    return "* 비밀번호가 다릅니다.";
+    return "* 비밀번호가 확인과 다릅니다.";
   }
 
   return "";
@@ -102,6 +102,10 @@ function getNicknameError() {
 
   if (/\s/.test(nickname)) {
     return "* 띄어쓰기를 없애주세요";
+  }
+
+  if (nickname.length < 2) {
+    return "* 닉네임은 최소 2자 이상 작성해야 합니다.";
   }
 
   if (nickname.length > 10) {
