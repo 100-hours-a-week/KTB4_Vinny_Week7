@@ -117,7 +117,7 @@
   width: 100%;
   height: 190px;
   margin-bottom: 18px;
-  background: #d6d6d6;
+  background: #d9d9d9;
 }
 
 .post-content {
@@ -158,12 +158,12 @@
 }
 
 .stat-box__count {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .stat-box__label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
 }
 

@@ -33,7 +33,12 @@
           <div class="form-group">
             <label class="label required" for="title">제목</label>
             <hr />
-            <input class="post__input" id="title" type="text" placeholder="제목을 입력해주세요. (최대 100글자)" />
+            <input
+              class="post__input"
+              id="title"
+              type="text"
+              maxlength="100"
+              placeholder="제목을 입력해주세요. (최대 100글자)" />
             <hr />
           </div>
           <div class="form-group">
@@ -59,7 +64,7 @@
       </section>
     </main>
   </div>
-  <script src="./js/post-write.js"></script>
+  <script type="module" src="./js/post-write.js"></script>
 </body>
 
 </html>

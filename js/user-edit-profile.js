@@ -1,3 +1,17 @@
+import { getNicknameError as getNicknameValidationError } from "./utils/validation.js";
+import {
+  getCurrentUser,
+  getStoredUsers,
+  removeCurrentUser,
+  updateCurrentUser
+} from "./shared/storage.js";
+import {
+  closeDialog,
+  openDialog,
+  setHelperText,
+  showToast
+} from "./utils/ui.js";
+
 const userEditForm = document.getElementById("user-edit-profile-form");
 const userEditNickname = document.getElementById("nickname");
 const nicknameHelperText = document.getElementById("nickname-helper-text");
@@ -18,60 +32,13 @@ const userDeleteConfirmButton = document.getElementById(
 );
 
 let profileImageData = "";
-let toastTimer;
-
-function getStoredUsers() {
-  try {
-    const users = JSON.parse(
-      localStorage.getItem("community-users")
-    );
-    return Array.isArray(users) ? users : [];
-  } catch {
-    return [];
-  }
-}
-
-function getCurrentUser() {
-  try {
-    return JSON.parse(localStorage.getItem("logged-in-user"));
-  } catch {
-    return null;
-  }
-}
-
-function setHelperText(helper, message) {
-  helper.textContent = message;
-  helper.classList.toggle("helper--visible", message !== "");
-}
 
 function getNicknameError() {
-  const nickname = userEditNickname.value;
-
-  if (nickname === "") {
-    return "* 닉네임을 입력해주세요";
-  }
-
-  if (/\s/.test(nickname)) {
-    return "* 띄어쓰기를 없애주세요";
-  }
-
-  if (nickname.length < 2) {
-    return "* 닉네임은 최소 2자 이상 작성해야 합니다.";
-  }
-
-  if (nickname.length > 10) {
-    return "* 닉네임은 최대 10자까지 작성 가능합니다.";
-  }
-
   const currentUser = getCurrentUser();
-  const isDuplicated = getStoredUsers().some(
-    (user) =>
-      typeof user.nickname === "string" &&
-      user.nickname === nickname &&
-      user.id !== currentUser?.id
-  );
-
-  return isDuplicated ? "* 중복된 닉네임입니다." : "";
+  return getNicknameValidationError(userEditNickname.value, {
+    users: getStoredUsers(),
+    currentUserId: currentUser?.id
+  });
 }
 
 function validateUserEditFields() {
@@ -91,15 +58,6 @@ function updateUserEditButtonState() {
 function showProfileImage(imageData) {
   profileImageData = imageData;
   profilePreviewImage.style.backgroundImage = `url("${imageData}")`;
-}
-
-function showEditToast() {
-  window.clearTimeout(toastTimer);
-  userEditToast.classList.add("toast--visible");
-
-  toastTimer = window.setTimeout(function() {
-    userEditToast.classList.remove("toast--visible");
-  }, 2000);
 }
 
 function initializeUserEditForm() {
@@ -136,19 +94,9 @@ function saveUserChanges() {
     nickname: userEditNickname.value,
     profileImage: profileImageData || currentUser.profileImage
   };
-  const updatedUsers = getStoredUsers().map((user) =>
-    user.id === currentUser.id ? updatedUser : user
-  );
 
   try {
-    localStorage.setItem(
-      "community-users",
-      JSON.stringify(updatedUsers)
-    );
-    localStorage.setItem(
-      "logged-in-user",
-      JSON.stringify(updatedUser)
-    );
+    updateCurrentUser(updatedUser);
   } catch {
     window.alert("회원정보를 저장하지 못했습니다. 더 작은 이미지를 선택해주세요.");
     return false;
@@ -163,37 +111,20 @@ function saveUserChanges() {
 }
 
 function openUserDeleteDialog() {
-  userDeleteDialog.showModal();
-  document.body.classList.add("modal-open");
+  openDialog(userDeleteDialog);
 }
 
 function closeUserDeleteDialog(returnValue = "cancel") {
-  userDeleteDialog.close(returnValue);
+  closeDialog(userDeleteDialog, returnValue);
 }
 
 function deleteCurrentUser() {
   try {
-    const currentUser = JSON.parse(
-      localStorage.getItem("logged-in-user")
-    );
-    const users = JSON.parse(
-      localStorage.getItem("community-users")
-    );
-
-    if (currentUser && Array.isArray(users)) {
-      const remainingUsers = users.filter(
-        (user) => user.id !== currentUser.id
-      );
-      localStorage.setItem(
-        "community-users",
-        JSON.stringify(remainingUsers)
-      );
-    }
+    removeCurrentUser();
   } catch {
     // 로그인 정보가 없거나 손상되어도 로그아웃 처리는 계속한다.
   }
 
-  localStorage.removeItem("logged-in-user");
   window.location.href = "./sign-in.html";
 }
 
@@ -238,7 +169,7 @@ userEditForm.addEventListener("submit", function(event) {
   }
 
   if (saveUserChanges()) {
-    showEditToast();
+    showToast(userEditToast);
   }
 });
 

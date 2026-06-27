@@ -1,5 +1,12 @@
-const PASSWORD_PATTERN =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,20}$/;
+import {
+  getConfirmPasswordError as getConfirmPasswordValidationError,
+  getPasswordError as getPasswordValidationError
+} from "./utils/validation.js";
+import {
+  getCurrentUser,
+  updateCurrentUser
+} from "./shared/storage.js";
+import { setHelperText, showToast } from "./utils/ui.js";
 
 const userEditPasswordForm = document.getElementById(
   "user-edit-password-form"
@@ -21,63 +28,18 @@ const userEditPasswordToast = document.getElementById(
   "user-edit-password-toast"
 );
 
-let toastTimer;
-
-function getStoredUsers() {
-  try {
-    const users = JSON.parse(
-      localStorage.getItem("community-users")
-    );
-    return Array.isArray(users) ? users : [];
-  } catch {
-    return [];
-  }
-}
-
-function getCurrentUser() {
-  try {
-    return JSON.parse(localStorage.getItem("logged-in-user"));
-  } catch {
-    return null;
-  }
-}
-
-function setHelperText(helper, message) {
-  helper.textContent = message;
-  helper.classList.toggle("helper--visible", message !== "");
-}
-
 function getPasswordError() {
-  const password = userEditPassword.value;
-
-  if (password === "") {
-    return "* 비밀번호를 입력해주세요";
-  }
-
-  if (!PASSWORD_PATTERN.test(password)) {
-    return "* 비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.";
-  }
-
-  if (
-    userEditConfirmPassword.value !== "" &&
-    password !== userEditConfirmPassword.value
-  ) {
-    return "* 비밀번호 확인과 다릅니다.";
-  }
-
-  return "";
+  return getPasswordValidationError(
+    userEditPassword.value,
+    userEditConfirmPassword.value
+  );
 }
 
 function getConfirmPasswordError() {
-  if (userEditConfirmPassword.value === "") {
-    return "* 비밀번호를 한번 더 입력해주세요";
-  }
-
-  if (userEditPassword.value !== userEditConfirmPassword.value) {
-    return "* 비밀번호와 다릅니다.";
-  }
-
-  return "";
+  return getConfirmPasswordValidationError(
+    userEditPassword.value,
+    userEditConfirmPassword.value
+  );
 }
 
 function validatePassword() {
@@ -103,15 +65,6 @@ function updatePasswordButtonState() {
   userEditPasswordButton.disabled = !isPasswordFormValid();
 }
 
-function showEditToast() {
-  window.clearTimeout(toastTimer);
-  userEditPasswordToast.classList.add("toast--visible");
-
-  toastTimer = window.setTimeout(function() {
-    userEditPasswordToast.classList.remove("toast--visible");
-  }, 2000);
-}
-
 function savePassword() {
   const currentUser = getCurrentUser();
 
@@ -127,19 +80,8 @@ function savePassword() {
     ...currentUser,
     password: userEditPassword.value
   };
-  const updatedUsers = getStoredUsers().map((user) =>
-    user.id === currentUser.id ? updatedUser : user
-  );
-
   try {
-    localStorage.setItem(
-      "community-users",
-      JSON.stringify(updatedUsers)
-    );
-    localStorage.setItem(
-      "logged-in-user",
-      JSON.stringify(updatedUser)
-    );
+    updateCurrentUser(updatedUser);
   } catch {
     window.alert("비밀번호를 저장하지 못했습니다.");
     return false;
@@ -183,7 +125,7 @@ userEditPasswordForm.addEventListener("submit", function(event) {
   setHelperText(passwordHelperText, "");
   setHelperText(confirmPasswordHelperText, "");
   updatePasswordButtonState();
-  showEditToast();
+  showToast(userEditPasswordToast);
 });
 
 updatePasswordButtonState();

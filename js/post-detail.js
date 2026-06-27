@@ -1,3 +1,7 @@
+import { formatPostCount } from "./utils/formatters.js";
+import { getCurrentUser } from "./shared/storage.js";
+import { closeDialog, openDialog } from "./utils/ui.js";
+
 const postDeleteButton = document.getElementById("post-delete-button");
 const postDeleteDialog = document.getElementById("post-delete-dialog");
 const postDeleteConfirmButton = document.getElementById(
@@ -26,40 +30,14 @@ const commentList = document.getElementById("comment-list");
 let editingComment = null;
 let deletingComment = null;
 
-function formatPostCount(value) {
-  const count = Number(value);
-
-  if (!Number.isFinite(count) || count < 0) {
-    return "0";
-  }
-
-  const integerCount = Math.floor(count);
-
-  if (integerCount < 1000) {
-    return String(integerCount);
-  }
-
-  const countInThousands = Math.floor(integerCount / 100) / 10;
-  return `${countInThousands.toFixed(1).replace(".0", "")}k`;
-}
-
-function renderCount(countElement) {
-  countElement.textContent = formatPostCount(countElement.dataset.count);
+function renderPostCount(countElement) {
+  countElement.textContent = formatPostCount(countElement.dataset.postCount);
 }
 
 function changeCount(countElement, amount) {
-  const currentCount = Number(countElement.dataset.count);
-  countElement.dataset.count = String(Math.max(0, currentCount + amount));
-  renderCount(countElement);
-}
-
-function openDialog(dialog) {
-  dialog.showModal();
-  document.body.classList.add("modal-open");
-}
-
-function closeDialog(dialog, returnValue = "cancel") {
-  dialog.close(returnValue);
+  const currentCount = Number(countElement.dataset.postCount);
+  countElement.dataset.postCount = String(Math.max(0, currentCount + amount));
+  renderPostCount(countElement);
 }
 
 function updateCommentButtonState() {
@@ -74,12 +52,7 @@ function resetCommentForm() {
 }
 
 function getCurrentNickname() {
-  try {
-    const user = JSON.parse(localStorage.getItem("logged-in-user"));
-    return user?.nickname || "데미 작성자 1";
-  } catch {
-    return "데미 작성자 1";
-  }
+  return getCurrentUser()?.nickname || "데미 작성자 1";
 }
 
 function createCommentElement(content) {
@@ -118,7 +91,7 @@ function createCommentElement(content) {
   return comment;
 }
 
-[likeCount, viewCount, commentCount].forEach(renderCount);
+[likeCount, viewCount, commentCount].forEach(renderPostCount);
 
 likeButton.addEventListener("click", function() {
   const isLiked = likeButton.classList.toggle("is-liked");

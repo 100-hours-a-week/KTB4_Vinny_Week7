@@ -1,8 +1,11 @@
-const USERS_STORAGE_KEY = "community-users";
-const EMAIL_PATTERN =
-  /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-const PASSWORD_PATTERN =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,20}$/;
+import {
+  getConfirmPasswordError as getConfirmPasswordValidationError,
+  getEmailError as getEmailValidationError,
+  getNicknameError as getNicknameValidationError,
+  getPasswordError as getPasswordValidationError
+} from "./utils/validation.js";
+import { addUser, getStoredUsers } from "./shared/storage.js";
+import { setHelperText } from "./utils/ui.js";
 
 const signUpForm = document.getElementById("sign-up-form");
 const signUpEmail = document.getElementById("email");
@@ -26,97 +29,31 @@ const profileHelperText = document.getElementById("profile-helper-text");
 
 let profileImageData = "";
 
-function getStoredUsers() {
-  try {
-    const users = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY));
-    return Array.isArray(users) ? users : [];
-  } catch {
-    return [];
-  }
-}
-
-function setHelperText(helper, message) {
-  helper.textContent = message;
-  helper.classList.toggle("helper--visible", message !== "");
-}
-
 function getEmailError() {
-  const email = signUpEmail.value;
-
-  if (email === "") {
-    return "* 이메일을 입력해주세요";
-  }
-
-  if (!EMAIL_PATTERN.test(email)) {
-    return "* 올바른 이메일 주소 형식을 입력해주세요 (예: example@example.com)";
-  }
-
-  const isDuplicated = getStoredUsers().some(
-    (user) =>
-      typeof user.email === "string" &&
-      user.email.toLowerCase() === email.toLowerCase()
-  );
-
-  return isDuplicated ? "* 중복된 이메일입니다." : "";
+  return getEmailValidationError(signUpEmail.value, {
+    users: getStoredUsers(),
+    checkDuplicate: true
+  });
 }
 
 function getPasswordError() {
-  const password = signUpPassword.value;
-
-  if (password === "") {
-    return "* 비밀번호를 입력해주세요";
-  }
-
-  if (!PASSWORD_PATTERN.test(password)) {
-    return "* 비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.";
-  }
-
-  if (
-    signUpConfirmPassword.value !== "" &&
-    password !== signUpConfirmPassword.value
-  ) {
-    return "* 비밀번호가 확인과 다릅니다.";
-  }
-
-  return "";
+  return getPasswordValidationError(
+    signUpPassword.value,
+    signUpConfirmPassword.value
+  );
 }
 
 function getConfirmPasswordError() {
-  if (signUpConfirmPassword.value === "") {
-    return "* 비밀번호를 한번더 입력해주세요";
-  }
-
-  if (signUpPassword.value !== signUpConfirmPassword.value) {
-    return "* 비밀번호가 다릅니다.";
-  }
-
-  return "";
+  return getConfirmPasswordValidationError(
+    signUpPassword.value,
+    signUpConfirmPassword.value
+  );
 }
 
 function getNicknameError() {
-  const nickname = signUpNickname.value;
-
-  if (nickname === "") {
-    return "* 닉네임을 입력해주세요";
-  }
-
-  if (/\s/.test(nickname)) {
-    return "* 띄어쓰기를 없애주세요";
-  }
-
-  if (nickname.length < 2) {
-    return "* 닉네임은 최소 2자 이상 작성해야 합니다.";
-  }
-
-  if (nickname.length > 10) {
-    return "* 닉네임은 최대 10자까지 작성 가능합니다.";
-  }
-
-  const isDuplicated = getStoredUsers().some(
-    (user) => typeof user.nickname === "string" && user.nickname === nickname
-  );
-
-  return isDuplicated ? "* 중복된 닉네임입니다." : "";
+  return getNicknameValidationError(signUpNickname.value, {
+    users: getStoredUsers()
+  });
 }
 
 function getProfileImageError() {
@@ -266,17 +203,14 @@ signUpForm.addEventListener("submit", function(event) {
     return;
   }
 
-  const users = getStoredUsers();
-  users.push({
-    id: Date.now(),
-    email: signUpEmail.value,
-    password: signUpPassword.value,
-    nickname: signUpNickname.value,
-    profileImage: profileImageData
-  });
-
   try {
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    addUser({
+      id: Date.now(),
+      email: signUpEmail.value,
+      password: signUpPassword.value,
+      nickname: signUpNickname.value,
+      profileImage: profileImageData
+    });
     window.location.href = "./sign-in.html";
   } catch {
     window.alert("회원정보를 저장하지 못했습니다. 더 작은 이미지를 선택해주세요.");
