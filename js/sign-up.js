@@ -5,7 +5,7 @@ import {
   getPasswordError
 } from "./utils/validation.js";
 import { signUp } from "./api/user.js";
-import { setHelperText } from "./utils/ui.js";
+import { setHelperText } from "./common/ui.js";
 
 function initializeSignUpPage() {
   const registrationForm = document.getElementById("sign-up-form");

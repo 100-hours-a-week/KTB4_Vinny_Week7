@@ -1,8 +1,8 @@
 import { deletePost, getPost, likePost } from "./api/post.js";
 import { initializeCommentSection } from "./comment-section.js";
-import { getAuthenticatedUserId } from "./shared/auth-session.js";
+import { getAuthenticatedUserId } from "./common/auth-session.js";
 import { formatPostCount } from "./utils/formatters.js";
-import { closeDialog, openDialog } from "./utils/ui.js";
+import { closeDialog, openDialog } from "./common/ui.js";
 
 const postTitle = document.getElementById("post-title");
 const postAuthorAvatar = document.getElementById("post-author-avatar");

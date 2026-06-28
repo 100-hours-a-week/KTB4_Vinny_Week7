@@ -4,8 +4,8 @@ import {
   getComments,
   updateComment
 } from "./api/comment.js";
-import { getAuthenticatedUserId } from "./shared/auth-session.js";
-import { closeDialog, openDialog } from "./utils/ui.js";
+import { getAuthenticatedUserId } from "./common/auth-session.js";
+import { closeDialog, openDialog } from "./common/ui.js";
 
 function createCommentElement(commentData) {
   const comment = document.createElement("section");

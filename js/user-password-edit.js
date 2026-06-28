@@ -2,9 +2,9 @@ import {
   getConfirmPasswordError,
   getPasswordError
 } from "./utils/validation.js";
-import { setHelperText, showToast } from "./utils/ui.js";
+import { setHelperText, showToast } from "./common/ui.js";
 import { updateUserPassword } from "./api/user.js";
-import { getAuthenticatedUserId } from "./shared/auth-session.js";
+import { getAuthenticatedUserId } from "./common/auth-session.js";
 
 const passwordForm = document.getElementById("user-password-edit-form");
 const passwordInput = document.getElementById("password");

@@ -4,7 +4,7 @@ import {
   openDialog,
   setHelperText,
   showToast
-} from "./utils/ui.js";
+} from "./common/ui.js";
 import {
   getUserInfo,
   updateUserProfile,
@@ -13,7 +13,7 @@ import {
 import {
   clearAuthSession,
   getAuthenticatedUserId
-} from "./shared/auth-session.js";
+} from "./common/auth-session.js";
 
 function initializeUserProfileEditPage() {
   const profileForm = document.getElementById("user-profile-edit-form");

@@ -2,9 +2,9 @@ import {
   getEmailError as getEmailValidationError,
   getPasswordError as getPasswordValidationError
 } from "./utils/validation.js";
-import { setHelperText } from "./utils/ui.js";
+import { setHelperText } from "./common/ui.js";
 import { signIn } from "./api/user.js";
-import { saveAuthSession } from "./shared/auth-session.js";
+import { saveAuthSession } from "./common/auth-session.js";
 
 const signInForm = document.getElementById("sign-in-form");
 const emailInput = document.getElementById("email");

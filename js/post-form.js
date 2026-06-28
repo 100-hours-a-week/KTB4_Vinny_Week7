@@ -1,5 +1,5 @@
-import { getPostError } from "../utils/validation.js";
-import { setHelperText } from "./ui.js";
+import { getPostError } from "./utils/validation.js";
+import { setHelperText } from "./common/ui.js";
 
 export function setupPostForm({
   form,

@@ -1,6 +1,6 @@
 import { createPost } from "./api/post.js";
 import { getAuthenticatedUserId } from "./common/auth-session.js";
-import { setupPostForm } from "./common/post-form.js";
+import { setupPostForm } from "./post-form.js";
 import { setHelperText } from "./common/ui.js";
 
 const postForm = document.getElementById("post-write-form");

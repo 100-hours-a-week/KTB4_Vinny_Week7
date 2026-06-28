@@ -1,6 +1,6 @@
 import { getPost, updatePost } from "./api/post.js";
-import { setupPostForm } from "./shared/post-form.js";
-import { setHelperText } from "./utils/ui.js";
+import { setupPostForm } from "./post-form.js";
+import { setHelperText } from "./common/ui.js";
 
 const postForm = document.getElementById("post-edit-form");
 const titleInput = document.getElementById("title");
