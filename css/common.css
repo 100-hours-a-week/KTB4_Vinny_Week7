@@ -255,6 +255,15 @@ a {
   cursor: not-allowed;
 }
 
+.btn--hover-primary {
+  background: var(--color-action-disabled);
+}
+
+.btn--hover-primary:hover,
+.btn--hover-primary:focus-visible {
+  background: var(--color-action-primary);
+}
+
 .btn--dark {
   background: var(--color-text-primary);
   color: var(--color-surface-default);
