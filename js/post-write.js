@@ -1,7 +1,7 @@
 import { createPost } from "./api/post.js";
-import { getAuthenticatedUserId } from "./shared/auth-session.js";
-import { setupPostForm } from "./shared/post-form.js";
-import { setHelperText } from "./utils/ui.js";
+import { getAuthenticatedUserId } from "./common/auth-session.js";
+import { setupPostForm } from "./common/post-form.js";
+import { setHelperText } from "./common/ui.js";
 
 const postForm = document.getElementById("post-write-form");
 const titleInput = document.getElementById("title");
