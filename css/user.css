@@ -19,9 +19,7 @@
   margin: 0 auto;
   border: 0;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at center, transparent 0 30%, var(--color-overlay) 31% 100%),
-    var(--color-surface-strong);
+  background-color: var(--color-surface-subtle);
   background-position: center;
   background-size: cover;
   overflow: hidden;

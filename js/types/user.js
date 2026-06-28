@@ -36,7 +36,7 @@
  * @property {string} id
  * @property {string} email
  * @property {string} nickname
- * @property {string} profileImageUrl
+ * @property {string | null} profileImageUrl
  */
 
 /**
@@ -53,7 +53,7 @@
 /**
  * @typedef {Object} AuthorSummaryResponse
  * @property {string} nickname
- * @property {string} profileImageUrl
+ * @property {string | null} profileImageUrl
  */
 
 export {};

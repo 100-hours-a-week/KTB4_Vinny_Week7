@@ -67,7 +67,7 @@ function renderPostList(posts) {
 
   if (posts.length === 0) {
     const emptyMessage = document.createElement("p");
-    emptyMessage.textContent = "등록된 게시글이 없습니다.";
+    emptyMessage.textContent = "";
     postList.append(emptyMessage);
     return;
   }
