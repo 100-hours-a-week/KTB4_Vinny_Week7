@@ -4,7 +4,7 @@ import {
   getNicknameError as getNicknameValidationError,
   getPasswordError as getPasswordValidationError
 } from "./utils/validation.js";
-import { addUser, getStoredUsers } from "./shared/storage.js";
+import { signUp } from "./api/user.js";
 import { setHelperText } from "./utils/ui.js";
 
 const signUpForm = document.getElementById("sign-up-form");
@@ -30,10 +30,7 @@ const profileHelperText = document.getElementById("profile-helper-text");
 let profileImageData = "";
 
 function getEmailError() {
-  return getEmailValidationError(signUpEmail.value, {
-    users: getStoredUsers(),
-    checkDuplicate: true
-  });
+  return getEmailValidationError(signUpEmail.value);
 }
 
 function getPasswordError() {
@@ -51,9 +48,7 @@ function getConfirmPasswordError() {
 }
 
 function getNicknameError() {
-  return getNicknameValidationError(signUpNickname.value, {
-    users: getStoredUsers()
-  });
+  return getNicknameValidationError(signUpNickname.value);
 }
 
 function getProfileImageError() {
@@ -186,7 +181,7 @@ signUpNickname.addEventListener("blur", validateNickname);
   input.addEventListener("input", updateSignUpButtonState);
 });
 
-signUpForm.addEventListener("submit", function(event) {
+signUpForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
   const isValid = [
@@ -203,17 +198,20 @@ signUpForm.addEventListener("submit", function(event) {
     return;
   }
 
+  signUpButton.disabled = true;
+
   try {
-    addUser({
-      id: Date.now(),
+    await signUp({
       email: signUpEmail.value,
       password: signUpPassword.value,
+      passwordConfirm: signUpConfirmPassword.value,
       nickname: signUpNickname.value,
-      profileImage: profileImageData
+      profileImageUrl: profileImageData
     });
     window.location.href = "./sign-in.html";
-  } catch {
-    window.alert("회원정보를 저장하지 못했습니다. 더 작은 이미지를 선택해주세요.");
+  } catch (error) {
+    console.error(error);
+    updateSignUpButtonState();
   }
 });
 

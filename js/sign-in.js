@@ -7,6 +7,7 @@ import {
   setCurrentUser
 } from "./shared/storage.js";
 import { setHelperText } from "./utils/ui.js";
+import { signIn } from "./api/user.js";
 
 const signInForm = document.getElementById("sign-in-form");
 const signInEmail = document.getElementById("email");
@@ -50,35 +51,32 @@ signInPassword.addEventListener("blur", validatePassword);
   input.addEventListener("input", updateSignInButtonState);
 });
 
-signInForm.addEventListener("submit", function(event) {
+signInForm.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  const isValid = [validateEmail(), validatePassword()].every(Boolean);
+  const isValid = [
+    validateEmail(),
+    validatePassword()
+  ].every(Boolean);
+
   updateSignInButtonState();
 
   if (!isValid) {
     return;
   }
 
-  const email = signInEmail.value.toLowerCase();
-  const password = signInPassword.value;
-  const user = getStoredUsers().find(
-    (storedUser) =>
-      typeof storedUser.email === "string" &&
-      storedUser.email.toLowerCase() === email &&
-      storedUser.password === password
-  );
+  signInButton.disabled = true;
 
-  if (!user) {
-    setHelperText(
-      passwordHelperText,
-      "*아이디 또는 비밀번호를 확인해주세요"
-    );
-    return;
+  try {
+    await signIn({
+      email: signInEmail.value,
+      password: signInPassword.value
+    });
+    window.location.href = "./posts.html";
+  } catch (error) {
+    setHelperText(passwordHelperText, error.message);
+    updateSignInButtonState();
   }
-
-  setCurrentUser(user);
-  window.location.href = "./posts.html";
 });
 
 updateSignInButtonState();
