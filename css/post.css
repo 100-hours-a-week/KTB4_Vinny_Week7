@@ -193,22 +193,30 @@
 .comment-form {
   margin-bottom: 18px;
   border: 1px solid var(--color-border-default);
+  border-radius: 10px;
   background: var(--color-surface-default);
 }
 
 .comment-form textarea {
   width: 100%;
   min-height: 120px;
-  border: 0;
+  border: none;
+  border-radius: 10px;
   padding: 16px;
   resize: vertical;
   font-size: 12px;
 }
 
+.comment-form textarea:focus {
+  outline: none;
+  border-color: var(--color-action-primary);
+}
+
 .comment-form__footer {
   display: flex;
   justify-content: flex-end;
-  padding: 0 8px 8px;
+  border-top: 1px solid var(--color-border-default);
+  padding: 6px 4px;
 }
 
 .comment-list {

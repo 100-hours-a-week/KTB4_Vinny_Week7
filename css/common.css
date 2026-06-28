@@ -343,17 +343,3 @@ dialog.dialog::backdrop {
 .dialog__actions .btn--primary {
   color: var(--color-text-primary);
 }
-
-@media (max-width: 520px) {
-  :root {
-    --header-height: 60px;
-  }
-
-  .site-header__title {
-    font-size: 18px;
-  }
-
-  .main {
-    padding-inline: 16px;
-  }
-}
