@@ -30,7 +30,7 @@ class SiteHeader extends HTMLElement {
 
     const signOutLink = header.querySelector("[data-sign-out]");
 
-    signOutLink.addEventListener("click", async function(event) {
+    async function handleSignOut(event) {
       event.preventDefault();
 
       if (signOutLink.getAttribute("aria-disabled") === "true") {
@@ -47,8 +47,9 @@ class SiteHeader extends HTMLElement {
         signOutLink.removeAttribute("aria-disabled");
         window.alert(error.message);
       }
-    });
+    }
 
+    signOutLink.addEventListener("click", handleSignOut);
     this.replaceWith(header);
   }
 }

@@ -30,7 +30,7 @@ export function setupPostForm({
     input.addEventListener("input", updateButtonState);
   });
 
-  form.addEventListener("submit", async function(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const isValid = validate();
@@ -45,8 +45,9 @@ export function setupPostForm({
         updateButtonState();
       }
     }
-  });
+  }
 
+  form.addEventListener("submit", handleSubmit);
   updateButtonState();
 
   return {

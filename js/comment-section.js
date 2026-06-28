@@ -51,8 +51,7 @@ function createCommentElement(commentData) {
 
 export function initializeCommentSection({
   postId,
-  onCountChange,
-  onCountSet
+  onCountChange
 }) {
   const commentForm = document.getElementById("comment-form");
   const commentInput = document.getElementById("comment-input");
@@ -87,15 +86,12 @@ export function initializeCommentSection({
       commentList.replaceChildren(
         ...comments.map(createCommentElement)
       );
-      onCountSet(comments.length);
     } catch (error) {
       commentList.textContent = error.message;
     }
   }
 
-  commentInput.addEventListener("input", updateButtonState);
-
-  commentForm.addEventListener("submit", async function(event) {
+  async function handleCommentSubmit(event) {
     event.preventDefault();
 
     const content = commentInput.value.trim();
@@ -145,9 +141,9 @@ export function initializeCommentSection({
     } finally {
       updateButtonState();
     }
-  });
+  }
 
-  commentList.addEventListener("click", function(event) {
+  function handleCommentListClick(event) {
     const editButton = event.target.closest(".comment-edit-button");
     const deleteButton = event.target.closest(".comment-delete-button");
     const comment = event.target.closest(".comment-item");
@@ -167,9 +163,9 @@ export function initializeCommentSection({
       deletingComment = comment;
       openDialog(commentDeleteDialog);
     }
-  });
+  }
 
-  commentDeleteConfirmButton.addEventListener("click", async function() {
+  async function handleDeleteConfirm() {
     if (!deletingComment) {
       window.alert("댓글 정보를 확인해주세요.");
       return;
@@ -193,24 +189,50 @@ export function initializeCommentSection({
     } finally {
       commentDeleteConfirmButton.disabled = false;
     }
-  });
+  }
 
-  commentDeleteDialog
-    .querySelectorAll("[data-dialog-close]")
-    .forEach(function(closeButton) {
-      closeButton.addEventListener("click", function() {
-        closeDialog(commentDeleteDialog, closeButton.value);
-      });
-    });
+  function handleDialogCloseClick(event) {
+    closeDialog(commentDeleteDialog, event.currentTarget.value);
+  }
 
-  commentDeleteDialog.addEventListener("close", function() {
+  function handleDialogClose() {
     if (!document.querySelector("dialog[open]")) {
       document.body.classList.remove("modal-open");
     }
 
     deletingComment = null;
+  }
+
+  const closeButtons = Array.from(
+    commentDeleteDialog.querySelectorAll("[data-dialog-close]")
+  );
+
+  commentInput.addEventListener("input", updateButtonState);
+  commentForm.addEventListener("submit", handleCommentSubmit);
+  commentList.addEventListener("click", handleCommentListClick);
+  commentDeleteConfirmButton.addEventListener(
+    "click",
+    handleDeleteConfirm
+  );
+  closeButtons.forEach(function(closeButton) {
+    closeButton.addEventListener("click", handleDialogCloseClick);
   });
+  commentDeleteDialog.addEventListener("close", handleDialogClose);
 
   updateButtonState();
   loadComments();
+
+  return function destroyCommentSection() {
+    commentInput.removeEventListener("input", updateButtonState);
+    commentForm.removeEventListener("submit", handleCommentSubmit);
+    commentList.removeEventListener("click", handleCommentListClick);
+    commentDeleteConfirmButton.removeEventListener(
+      "click",
+      handleDeleteConfirm
+    );
+    closeButtons.forEach(function(closeButton) {
+      closeButton.removeEventListener("click", handleDialogCloseClick);
+    });
+    commentDeleteDialog.removeEventListener("close", handleDialogClose);
+  };
 }

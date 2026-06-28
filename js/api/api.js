@@ -2,9 +2,10 @@ const API_BASE_URL = "http://localhost:8080";
 
 export async function request(path, options = {}) {
   const headers = new Headers(options.headers);
-  const isFormData = options.body instanceof FormData;
+  const hasBody = options.body !== undefined && options.body !== null;
+  const isFormData = hasBody && options.body instanceof FormData;
 
-  if (!isFormData && !headers.has("Content-Type")) {
+  if (hasBody && !isFormData && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
 
@@ -27,5 +28,6 @@ export async function request(path, options = {}) {
   if (!apiResponse.success) {
     throw new Error(apiResponse.message || "요청에 실패했습니다.");
   }
-  return apiResponse.data; 
+
+  return apiResponse.data;
 }

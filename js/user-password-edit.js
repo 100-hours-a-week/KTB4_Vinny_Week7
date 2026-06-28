@@ -16,14 +16,6 @@ const passwordConfirmHelperText = document.getElementById(
 const submitButton = document.getElementById("user-password-edit-button");
 const successToast = document.getElementById("user-password-edit-toast");
 
-function getPasswordValidationMessage(password, passwordConfirm) {
-  return getPasswordError(password, passwordConfirm);
-}
-
-function getPasswordConfirmValidationMessage(password, passwordConfirm) {
-  return getConfirmPasswordError(password, passwordConfirm);
-}
-
 function createPasswordUpdatePayload(password, passwordConfirm) {
   return { password, passwordConfirm };
 }
@@ -37,11 +29,11 @@ function readPasswordValues() {
 
 function isPasswordFormValid(values) {
   return (
-    getPasswordValidationMessage(
+    getPasswordError(
       values.password,
       values.passwordConfirm
     ) === "" &&
-    getPasswordConfirmValidationMessage(
+    getConfirmPasswordError(
       values.password,
       values.passwordConfirm
     ) === ""
@@ -50,7 +42,7 @@ function isPasswordFormValid(values) {
 
 function validatePassword() {
   const values = readPasswordValues();
-  const message = getPasswordValidationMessage(
+  const message = getPasswordError(
     values.password,
     values.passwordConfirm
   );
@@ -61,7 +53,7 @@ function validatePassword() {
 
 function validatePasswordConfirm() {
   const values = readPasswordValues();
-  const message = getPasswordConfirmValidationMessage(
+  const message = getConfirmPasswordError(
     values.password,
     values.passwordConfirm
   );
@@ -91,7 +83,7 @@ passwordConfirmInput.addEventListener("blur", function() {
   input.addEventListener("input", updateSubmitButtonState);
 });
 
-passwordForm.addEventListener("submit", async function(event) {
+async function handlePasswordSubmit(event) {
   event.preventDefault();
 
   const isValid = [
@@ -130,6 +122,7 @@ passwordForm.addEventListener("submit", async function(event) {
   } finally {
     updateSubmitButtonState();
   }
-});
+}
 
+passwordForm.addEventListener("submit", handlePasswordSubmit);
 updateSubmitButtonState();

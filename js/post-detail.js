@@ -118,7 +118,7 @@ async function loadPostDetail() {
   }
 }
 
-likeButton.addEventListener("click", async function() {
+async function handleLikeClick() {
   const postId = getPostIdFromUrl();
   const userId = getAuthenticatedUserId();
 
@@ -145,13 +145,13 @@ likeButton.addEventListener("click", async function() {
   } finally {
     likeButton.disabled = false;
   }
-});
+}
 
-postDeleteButton.addEventListener("click", function() {
+function handlePostDeleteClick() {
   openDialog(postDeleteDialog);
-});
+}
 
-postDeleteConfirmButton.addEventListener("click", async function() {
+async function handlePostDeleteConfirm() {
   const postId = getPostIdFromUrl();
 
   if (!postId) {
@@ -169,7 +169,20 @@ postDeleteConfirmButton.addEventListener("click", async function() {
     postDeleteConfirmButton.disabled = false;
     window.alert(error.message);
   }
-});
+}
+
+function handlePostDeleteDialogClose() {
+  if (!document.querySelector("dialog[open]")) {
+    document.body.classList.remove("modal-open");
+  }
+}
+
+likeButton.addEventListener("click", handleLikeClick);
+postDeleteButton.addEventListener("click", handlePostDeleteClick);
+postDeleteConfirmButton.addEventListener(
+  "click",
+  handlePostDeleteConfirm
+);
 
 postDeleteDialog
   .querySelectorAll("[data-dialog-close]")
@@ -179,11 +192,7 @@ postDeleteDialog
     });
   });
 
-postDeleteDialog.addEventListener("close", function() {
-  if (!document.querySelector("dialog[open]")) {
-    document.body.classList.remove("modal-open");
-  }
-});
+postDeleteDialog.addEventListener("close", handlePostDeleteDialogClose);
 
 const postId = getPostIdFromUrl();
 
@@ -194,9 +203,6 @@ if (postId) {
     postId,
     onCountChange(amount) {
       changeCount(commentCount, amount);
-    },
-    onCountSet(count) {
-      setPostCount(commentCount, count);
     }
   });
 }

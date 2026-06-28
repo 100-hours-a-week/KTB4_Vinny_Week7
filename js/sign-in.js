@@ -52,7 +52,7 @@ function createSignInPayload(email, password) {
 emailInput.addEventListener("blur", validateEmail);
 passwordInput.addEventListener("blur", validatePassword);
 
-signInForm.addEventListener("submit", async function(event) {
+async function handleSignInSubmit(event) {
   event.preventDefault();
 
   const isValid = [
@@ -78,6 +78,7 @@ signInForm.addEventListener("submit", async function(event) {
     setHelperText(passwordHelperText, error.message);
     updateSignInButtonState();
   }
-});
+}
 
+signInForm.addEventListener("submit", handleSignInSubmit);
 updateSignInButtonState();
