@@ -4,20 +4,21 @@ import {
 } from "./utils/validation.js";
 import { setHelperText } from "./utils/ui.js";
 import { signIn } from "./api/user.js";
+import { saveAuthSession } from "./shared/auth-session.js";
 
 const signInForm = document.getElementById("sign-in-form");
-const signInEmail = document.getElementById("email");
+const emailInput = document.getElementById("email");
 const emailHelperText = document.getElementById("email-helper-text");
-const signInPassword = document.getElementById("password");
+const passwordInput = document.getElementById("password");
 const passwordHelperText = document.getElementById("password-helper-text");
-const signInButton = document.getElementById("sign-in-button");
+const submitButton = document.getElementById("sign-in-button");
 
 function getEmailError() {
-  return getEmailValidationError(signInEmail.value);
+  return getEmailValidationError(emailInput.value);
 }
 
 function getPasswordError() {
-  return getPasswordValidationError(signInPassword.value);
+  return getPasswordValidationError(passwordInput.value);
 }
 
 function validateEmail() {
@@ -37,17 +38,21 @@ function isSignInFormValid() {
 }
 
 function updateSignInButtonState() {
-  signInButton.disabled = !isSignInFormValid();
+  submitButton.disabled = !isSignInFormValid();
 }
 
-signInEmail.addEventListener("blur", validateEmail);
-signInPassword.addEventListener("blur", validatePassword);
+function createSignInPayload(email, password) {
+  return { email, password };
+}
 
-[signInEmail, signInPassword].forEach(function(input) {
+[emailInput, passwordInput].forEach(function(input) {
   input.addEventListener("input", updateSignInButtonState);
 });
 
-signInForm.addEventListener("submit", async function (event) {
+emailInput.addEventListener("blur", validateEmail);
+passwordInput.addEventListener("blur", validatePassword);
+
+signInForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
   const isValid = [
@@ -61,14 +66,13 @@ signInForm.addEventListener("submit", async function (event) {
     return;
   }
 
-  signInButton.disabled = true;
+  submitButton.disabled = true;
 
   try {
-    const auth = await signIn({
-      email: signInEmail.value,
-      password: signInPassword.value
-    });
-    window.localStorage.setItem("userId", JSON.stringify(auth.userId));
+    const authSession = await signIn(
+      createSignInPayload(emailInput.value, passwordInput.value)
+    );
+    saveAuthSession(authSession);
     window.location.href = "./posts.html";
   } catch (error) {
     setHelperText(passwordHelperText, error.message);

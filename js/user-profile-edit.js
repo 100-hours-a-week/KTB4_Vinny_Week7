@@ -1,131 +1,176 @@
-import { getNicknameError as getNicknameValidationError } from "./utils/validation.js";
+import { getNicknameError } from "./utils/validation.js";
 import {
   closeDialog,
   openDialog,
   setHelperText,
   showToast
 } from "./utils/ui.js";
+import {
+  getUserInfo,
+  updateUserProfile,
+  withdrawUser
+} from "./api/user.js";
+import {
+  clearAuthSession,
+  getAuthenticatedUserId
+} from "./shared/auth-session.js";
 
-const userEditForm = document.getElementById("user-profile-edit-form");
-const userEditNickname = document.getElementById("nickname");
+const profileForm = document.getElementById("user-profile-edit-form");
+const emailText = document.getElementById("user-email");
+const nicknameInput = document.getElementById("nickname");
 const nicknameHelperText = document.getElementById("nickname-helper-text");
-const userEditButton = document.getElementById("user-edit-button");
-const userEmail = document.getElementById("user-email");
-const profilePreviewImage = document.getElementById(
-  "profile-preview-image"
-);
+const profileImageButton = document.getElementById("profile-preview-image");
 const profileImageInput = document.getElementById("profile-image-input");
-const userEditToast = document.getElementById("user-edit-toast");
-const userDeleteButton = document.getElementById("user-delete-button");
-const userDeleteDialog = document.getElementById("user-delete-dialog");
-const userDeleteCancelButton = document.getElementById(
+const submitButton = document.getElementById("user-edit-button");
+const successToast = document.getElementById("user-edit-toast");
+const withdrawButton = document.getElementById("user-delete-button");
+const withdrawDialog = document.getElementById("user-delete-dialog");
+const withdrawCancelButton = document.getElementById(
   "user-delete-cancel-button"
 );
-const userDeleteConfirmButton = document.getElementById(
+const withdrawConfirmButton = document.getElementById(
   "user-delete-confirm-button"
 );
 
-let profileImageData = "";
+let loadedUserProfile = null;
+let selectedProfileImageUrl = "";
 
-function getNicknameError() {
-  const currentUser = getCurrentUser();
-  return getNicknameValidationError(userEditNickname.value, {
-    users: getStoredUsers(),
-    currentUserId: currentUser?.id
-  });
+function getNicknameValidationMessage(nickname) {
+  return getNicknameError(nickname);
 }
 
-function validateUserEditFields() {
-  const error = getNicknameError();
-  setHelperText(nicknameHelperText, error);
-  return error === "";
+function createProfileUpdatePayload(
+  userProfile,
+  nickname,
+  profileImageUrl
+) {
+  return {
+    nickname,
+    profileImageUrl:
+      profileImageUrl || userProfile.profileImageUrl || ""
+  };
 }
 
-function isUserEditFormValid() {
-  return getNicknameError() === "";
+function mergeUserProfile(userProfile, payload, response) {
+  return {
+    ...userProfile,
+    ...payload,
+    ...(response ?? {})
+  };
 }
 
-function updateUserEditButtonState() {
-  userEditButton.disabled = !isUserEditFormValid();
+// 페이지 존재하지 않아서 하드코딩
+function createWithdrawPayload() {
+  return {
+    withdrawReasonType: 1,
+    withdrawReasonDetail: "사용하지 않음"
+  };
 }
 
-function showProfileImage(imageData) {
-  profileImageData = imageData;
-  profilePreviewImage.style.backgroundImage = `url("${imageData}")`;
+function isProfileFormValid(nickname) {
+  return getNicknameValidationMessage(nickname) === "";
 }
 
-function initializeUserEditForm() {
-  const currentUser = getCurrentUser();
+function updateSubmitButtonState() {
+  submitButton.disabled = !isProfileFormValid(nicknameInput.value);
+}
 
-  if (!currentUser) {
-    updateUserEditButtonState();
+function validateNickname() {
+  const message = getNicknameValidationMessage(nicknameInput.value);
+  setHelperText(nicknameHelperText, message);
+  return message === "";
+}
+
+function renderProfileImage(profileImageUrl) {
+  selectedProfileImageUrl = profileImageUrl;
+  profileImageButton.style.backgroundImage = `url("${profileImageUrl}")`;
+}
+
+function renderUserProfile(userProfile) {
+  emailText.textContent = userProfile.email || "";
+  nicknameInput.value = userProfile.nickname || "";
+
+  if (userProfile.profileImageUrl) {
+    renderProfileImage(userProfile.profileImageUrl);
+  }
+
+  updateSubmitButtonState();
+}
+
+async function loadUserProfile() {
+  const userId = getAuthenticatedUserId();
+
+  if (!userId) {
+    setHelperText(nicknameHelperText, "* 로그인 정보를 확인해주세요.");
     return;
   }
 
-  userEmail.textContent = currentUser.email || "";
-  userEditNickname.value = currentUser.nickname || "";
-
-  if (currentUser.profileImage) {
-    showProfileImage(currentUser.profileImage);
+  try {
+    loadedUserProfile = await getUserInfo(userId);
+    renderUserProfile(loadedUserProfile);
+  } catch (error) {
+    setHelperText(nicknameHelperText, error.message);
   }
-
-  updateUserEditButtonState();
 }
 
-function saveUserChanges() {
-  const currentUser = getCurrentUser();
+async function submitProfileUpdate() {
+  const userId = getAuthenticatedUserId();
 
-  if (!currentUser) {
-    setHelperText(
-      nicknameHelperText,
-      "* 로그인 정보를 확인해주세요."
+  if (!userId || !loadedUserProfile) {
+    setHelperText(nicknameHelperText, "* 로그인 정보를 확인해주세요.");
+    return false;
+  }
+
+  const payload = createProfileUpdatePayload(
+    loadedUserProfile,
+    nicknameInput.value,
+    selectedProfileImageUrl
+  );
+
+  try {
+    const response = await updateUserProfile(userId, payload);
+    loadedUserProfile = mergeUserProfile(
+      loadedUserProfile,
+      payload,
+      response
     );
+    renderUserProfile(loadedUserProfile);
+
+    const headerAvatar = document.querySelector(".avatar");
+
+    if (headerAvatar && loadedUserProfile.profileImageUrl) {
+      headerAvatar.style.backgroundImage =
+        `url("${loadedUserProfile.profileImageUrl}")`;
+    }
+
+    return true;
+  } catch (error) {
+    setHelperText(nicknameHelperText, error.message);
     return false;
   }
+}
 
-  const updatedUser = {
-    ...currentUser,
-    nickname: userEditNickname.value,
-    profileImage: profileImageData || currentUser.profileImage
-  };
+async function withdrawAuthenticatedUser() {
+  const userId = getAuthenticatedUserId();
+
+  if (!userId) {
+    window.location.href = "./sign-in.html";
+    return;
+  }
 
   try {
-    updateCurrentUser(updatedUser);
-  } catch {
-    window.alert("회원정보를 저장하지 못했습니다.");
-    return false;
+    await withdrawUser(userId, createWithdrawPayload());
+    clearAuthSession();
+    window.location.href = "./sign-in.html";
+  } catch (error) {
+    window.alert(error.message);
   }
-
-  if (updatedUser.profileImage) {
-    document.querySelector(".avatar").style.backgroundImage =
-      `url("${updatedUser.profileImage}")`;
-  }
-
-  return true;
 }
 
-function openUserDeleteDialog() {
-  openDialog(userDeleteDialog);
-}
+nicknameInput.addEventListener("blur", validateNickname);
+nicknameInput.addEventListener("input", updateSubmitButtonState);
 
-function closeUserDeleteDialog(returnValue = "cancel") {
-  closeDialog(userDeleteDialog, returnValue);
-}
-
-function deleteCurrentUser() {
-  try {
-    removeCurrentUser();
-  } catch {
-    // 로그인 정보가 없거나 손상되어도 로그아웃 처리는 계속한다.
-  }
-
-  window.location.href = "./sign-in.html";
-}
-
-userEditNickname.addEventListener("blur", validateUserEditFields);
-userEditNickname.addEventListener("input", updateUserEditButtonState);
-
-profilePreviewImage.addEventListener("click", function() {
+profileImageButton.addEventListener("click", function() {
   profileImageInput.click();
 });
 
@@ -143,8 +188,9 @@ profileImageInput.addEventListener("change", function() {
   }
 
   const reader = new FileReader();
+
   reader.addEventListener("load", function() {
-    showProfileImage(reader.result);
+    renderProfileImage(reader.result);
   });
   reader.addEventListener("error", function() {
     window.alert("이미지를 불러오지 못했습니다.");
@@ -152,34 +198,38 @@ profileImageInput.addEventListener("change", function() {
   reader.readAsDataURL(imageFile);
 });
 
-userEditForm.addEventListener("submit", function(event) {
+profileForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  const isValid = validateUserEditFields();
-  updateUserEditButtonState();
-
-  if (!isValid) {
+  if (!validateNickname()) {
+    updateSubmitButtonState();
     return;
   }
 
-  if (saveUserChanges()) {
-    showToast(userEditToast);
+  submitButton.disabled = true;
+
+  if (await submitProfileUpdate()) {
+    showToast(successToast);
   }
+
+  updateSubmitButtonState();
 });
 
-userDeleteButton.addEventListener("click", openUserDeleteDialog);
-
-userDeleteCancelButton.addEventListener("click", function() {
-  closeUserDeleteDialog();
+withdrawButton.addEventListener("click", function() {
+  openDialog(withdrawDialog);
 });
 
-userDeleteConfirmButton.addEventListener("click", function() {
-  closeUserDeleteDialog("confirm");
-  deleteCurrentUser();
+withdrawCancelButton.addEventListener("click", function() {
+  closeDialog(withdrawDialog);
 });
 
-userDeleteDialog.addEventListener("close", function() {
+withdrawConfirmButton.addEventListener("click", async function() {
+  closeDialog(withdrawDialog, "confirm");
+  await withdrawAuthenticatedUser();
+});
+
+withdrawDialog.addEventListener("close", function() {
   document.body.classList.remove("modal-open");
 });
 
-initializeUserEditForm();
+loadUserProfile();

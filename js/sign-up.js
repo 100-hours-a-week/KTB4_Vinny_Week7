@@ -1,127 +1,136 @@
 import {
-  getConfirmPasswordError as getConfirmPasswordValidationError,
-  getEmailError as getEmailValidationError,
-  getNicknameError as getNicknameValidationError,
-  getPasswordError as getPasswordValidationError
+  getConfirmPasswordError,
+  getEmailError,
+  getNicknameError,
+  getPasswordError
 } from "./utils/validation.js";
 import { signUp } from "./api/user.js";
 import { setHelperText } from "./utils/ui.js";
 
-const signUpForm = document.getElementById("sign-up-form");
-const signUpEmail = document.getElementById("email");
+const registrationForm = document.getElementById("sign-up-form");
+const emailInput = document.getElementById("email");
 const emailHelperText = document.getElementById("email-helper-text");
-const signUpPassword = document.getElementById("password");
+const passwordInput = document.getElementById("password");
 const passwordHelperText = document.getElementById("password-helper-text");
-const signUpConfirmPassword = document.getElementById("password-confirm");
-const confirmPasswordHelperText = document.getElementById(
+const passwordConfirmInput = document.getElementById("password-confirm");
+const passwordConfirmHelperText = document.getElementById(
   "confirm-password-helper-text"
 );
-const signUpNickname = document.getElementById("nickname");
+const nicknameInput = document.getElementById("nickname");
 const nicknameHelperText = document.getElementById("nickname-helper-text");
-const signUpButton = document.getElementById("sign-up-button");
+const submitButton = document.getElementById("sign-up-button");
 const profileImageInput = document.getElementById("profile-image");
 const profileImageButton = document.getElementById("profile-image-button");
 const profileImagePreview = document.getElementById("profile-image-preview");
 const profileImagePlaceholder = document.getElementById(
   "profile-image-placeholder"
 );
-const profileHelperText = document.getElementById("profile-helper-text");
+const profileImageHelperText = document.getElementById(
+  "profile-helper-text"
+);
 
-let profileImageData = "";
+let selectedProfileImageUrl = "";
 
-function getEmailError() {
-  return getEmailValidationError(signUpEmail.value);
+function getProfileImageError(profileImageUrl) {
+  return profileImageUrl === ""
+    ? "*프로필 사진을 추가해주세요."
+    : "";
 }
 
-function getPasswordError() {
-  return getPasswordValidationError(
-    signUpPassword.value,
-    signUpConfirmPassword.value
+function getRegistrationErrors(values) {
+  return {
+    email: getEmailError(values.email),
+    password: getPasswordError(
+      values.password,
+      values.passwordConfirm
+    ),
+    passwordConfirm: getConfirmPasswordError(
+      values.password,
+      values.passwordConfirm
+    ),
+    nickname: getNicknameError(values.nickname),
+    profileImage: getProfileImageError(values.profileImageUrl)
+  };
+}
+
+function createSignUpPayload(values) {
+  return {
+    email: values.email,
+    password: values.password,
+    passwordConfirm: values.passwordConfirm,
+    nickname: values.nickname,
+    profileImageUrl: values.profileImageUrl
+  };
+}
+
+function readRegistrationValues() {
+  return {
+    email: emailInput.value,
+    password: passwordInput.value,
+    passwordConfirm: passwordConfirmInput.value,
+    nickname: nicknameInput.value,
+    profileImageUrl: selectedProfileImageUrl
+  };
+}
+
+function isRegistrationFormValid(values) {
+  return Object.values(getRegistrationErrors(values)).every(
+    (message) => message === ""
   );
 }
 
-function getConfirmPasswordError() {
-  return getConfirmPasswordValidationError(
-    signUpPassword.value,
-    signUpConfirmPassword.value
+function updateSubmitButtonState() {
+  submitButton.disabled = !isRegistrationFormValid(
+    readRegistrationValues()
   );
-}
-
-function getNicknameError() {
-  return getNicknameValidationError(signUpNickname.value);
-}
-
-function getProfileImageError() {
-  return profileImageData === "" ? "*프로필 사진을 추가해주세요." : "";
 }
 
 function validateEmail() {
-  const error = getEmailError();
-  setHelperText(emailHelperText, error);
-  return error === "";
+  const message = getEmailError(emailInput.value);
+  setHelperText(emailHelperText, message);
+  return message === "";
 }
 
 function validatePassword() {
-  const error = getPasswordError();
-  setHelperText(passwordHelperText, error);
-  return error === "";
+  const message = getPasswordError(
+    passwordInput.value,
+    passwordConfirmInput.value
+  );
+  setHelperText(passwordHelperText, message);
+  return message === "";
 }
 
-function validateConfirmPassword() {
-  const error = getConfirmPasswordError();
-  setHelperText(confirmPasswordHelperText, error);
-  return error === "";
+function validatePasswordConfirm() {
+  const message = getConfirmPasswordError(
+    passwordInput.value,
+    passwordConfirmInput.value
+  );
+  setHelperText(passwordConfirmHelperText, message);
+  return message === "";
 }
 
 function validateNickname() {
-  const error = getNicknameError();
-  setHelperText(nicknameHelperText, error);
-  return error === "";
+  const message = getNicknameError(nicknameInput.value);
+  setHelperText(nicknameHelperText, message);
+  return message === "";
 }
 
 function validateProfileImage() {
-  const error = getProfileImageError();
-  setHelperText(profileHelperText, error);
-  return error === "";
+  const message = getProfileImageError(selectedProfileImageUrl);
+  setHelperText(profileImageHelperText, message);
+  return message === "";
 }
 
-function isSignUpFormValid() {
-  return (
-    getEmailError() === "" &&
-    getPasswordError() === "" &&
-    getConfirmPasswordError() === "" &&
-    getNicknameError() === "" &&
-    getProfileImageError() === ""
-  );
-}
-
-function updateSignUpButtonState() {
-  signUpButton.disabled = !isSignUpFormValid();
-}
-
-function resetProfileImage() {
-  profileImageData = "";
-  profileImageInput.value = "";
-  profileImagePreview.removeAttribute("src");
-  profileImagePreview.hidden = true;
-  profileImagePlaceholder.hidden = false;
-}
-
-function showProfileImage(imageData) {
-  profileImageData = imageData;
-  profileImagePreview.src = imageData;
+function renderProfileImage(profileImageUrl) {
+  selectedProfileImageUrl = profileImageUrl;
+  profileImagePreview.src = profileImageUrl;
   profileImagePreview.hidden = false;
   profileImagePlaceholder.hidden = true;
-  setHelperText(profileHelperText, "");
-  updateSignUpButtonState();
+  setHelperText(profileImageHelperText, "");
+  updateSubmitButtonState();
 }
 
 profileImageButton.addEventListener("click", function() {
-  if (profileImageData !== "") {
-    resetProfileImage();
-    updateSignUpButtonState();
-  }
-
   profileImageInput.click();
 });
 
@@ -130,90 +139,88 @@ profileImageInput.addEventListener("change", function() {
 
   if (!imageFile) {
     validateProfileImage();
-    updateSignUpButtonState();
     return;
   }
 
   if (!imageFile.type.startsWith("image/")) {
-    resetProfileImage();
-    setHelperText(profileHelperText, "* 이미지 파일을 선택해주세요.");
-    updateSignUpButtonState();
+    profileImageInput.value = "";
+    setHelperText(
+      profileImageHelperText,
+      "* 이미지 파일을 선택해주세요."
+    );
+    updateSubmitButtonState();
     return;
   }
 
   const reader = new FileReader();
+
   reader.addEventListener("load", function() {
-    showProfileImage(reader.result);
+    renderProfileImage(reader.result);
   });
   reader.addEventListener("error", function() {
-    resetProfileImage();
-    setHelperText(profileHelperText, "* 이미지를 불러오지 못했습니다.");
-    updateSignUpButtonState();
+    setHelperText(
+      profileImageHelperText,
+      "* 이미지를 불러오지 못했습니다."
+    );
+    updateSubmitButtonState();
   });
   reader.readAsDataURL(imageFile);
 });
 
 profileImageInput.addEventListener("cancel", function() {
   validateProfileImage();
-  updateSignUpButtonState();
+  updateSubmitButtonState();
 });
 
-signUpEmail.addEventListener("blur", validateEmail);
-signUpPassword.addEventListener("blur", function() {
+emailInput.addEventListener("blur", validateEmail);
+passwordInput.addEventListener("blur", function() {
   validatePassword();
 
-  if (signUpConfirmPassword.value !== "") {
-    validateConfirmPassword();
+  if (passwordConfirmInput.value !== "") {
+    validatePasswordConfirm();
   }
 });
-signUpConfirmPassword.addEventListener("blur", function() {
-  validateConfirmPassword();
+passwordConfirmInput.addEventListener("blur", function() {
+  validatePasswordConfirm();
   validatePassword();
 });
-signUpNickname.addEventListener("blur", validateNickname);
+nicknameInput.addEventListener("blur", validateNickname);
 
 [
-  signUpEmail,
-  signUpPassword,
-  signUpConfirmPassword,
-  signUpNickname
+  emailInput,
+  passwordInput,
+  passwordConfirmInput,
+  nicknameInput
 ].forEach(function(input) {
-  input.addEventListener("input", updateSignUpButtonState);
+  input.addEventListener("input", updateSubmitButtonState);
 });
 
-signUpForm.addEventListener("submit", async function(event) {
+registrationForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
   const isValid = [
     validateEmail(),
     validatePassword(),
-    validateConfirmPassword(),
+    validatePasswordConfirm(),
     validateNickname(),
     validateProfileImage()
   ].every(Boolean);
 
-  updateSignUpButtonState();
-
   if (!isValid) {
+    updateSubmitButtonState();
     return;
   }
 
-  signUpButton.disabled = true;
+  submitButton.disabled = true;
 
   try {
-    await signUp({
-      email: signUpEmail.value,
-      password: signUpPassword.value,
-      passwordConfirm: signUpConfirmPassword.value,
-      nickname: signUpNickname.value,
-      profileImageUrl: profileImageData
-    });
+    await signUp(createSignUpPayload(readRegistrationValues()));
     window.location.href = "./sign-in.html";
   } catch (error) {
-    console.error(error);
-    updateSignUpButtonState();
+    window.alert(error.message);
+    updateSubmitButtonState();
   }
 });
 
 validateProfileImage();
-updateSignUpButtonState();
+updateSubmitButtonState();

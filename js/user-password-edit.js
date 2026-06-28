@@ -1,127 +1,135 @@
 import {
-  getConfirmPasswordError as getConfirmPasswordValidationError,
-  getPasswordError as getPasswordValidationError
+  getConfirmPasswordError,
+  getPasswordError
 } from "./utils/validation.js";
 import { setHelperText, showToast } from "./utils/ui.js";
+import { updateUserPassword } from "./api/user.js";
+import { getAuthenticatedUserId } from "./shared/auth-session.js";
 
-const userEditPasswordForm = document.getElementById(
-  "user-password-edit-form"
-);
-const userEditPassword = document.getElementById("password");
-const passwordHelperText = document.getElementById(
-  "password-helper-text"
-);
-const userEditConfirmPassword = document.getElementById(
-  "password-confirm"
-);
-const confirmPasswordHelperText = document.getElementById(
+const passwordForm = document.getElementById("user-password-edit-form");
+const passwordInput = document.getElementById("password");
+const passwordHelperText = document.getElementById("password-helper-text");
+const passwordConfirmInput = document.getElementById("password-confirm");
+const passwordConfirmHelperText = document.getElementById(
   "confirm-password-helper-text"
 );
-const userEditPasswordButton = document.getElementById(
-  "user-password-edit-button"
-);
-const userEditPasswordToast = document.getElementById(
-  "user-password-edit-toast"
-);
+const submitButton = document.getElementById("user-password-edit-button");
+const successToast = document.getElementById("user-password-edit-toast");
 
-function getPasswordError() {
-  return getPasswordValidationError(
-    userEditPassword.value,
-    userEditConfirmPassword.value
-  );
+function getPasswordValidationMessage(password, passwordConfirm) {
+  return getPasswordError(password, passwordConfirm);
 }
 
-function getConfirmPasswordError() {
-  return getConfirmPasswordValidationError(
-    userEditPassword.value,
-    userEditConfirmPassword.value
+function getPasswordConfirmValidationMessage(password, passwordConfirm) {
+  return getConfirmPasswordError(password, passwordConfirm);
+}
+
+function createPasswordUpdatePayload(password, passwordConfirm) {
+  return { password, passwordConfirm };
+}
+
+function readPasswordValues() {
+  return {
+    password: passwordInput.value,
+    passwordConfirm: passwordConfirmInput.value
+  };
+}
+
+function isPasswordFormValid(values) {
+  return (
+    getPasswordValidationMessage(
+      values.password,
+      values.passwordConfirm
+    ) === "" &&
+    getPasswordConfirmValidationMessage(
+      values.password,
+      values.passwordConfirm
+    ) === ""
   );
 }
 
 function validatePassword() {
-  const error = getPasswordError();
-  setHelperText(passwordHelperText, error);
-  return error === "";
-}
-
-function validateConfirmPassword() {
-  const error = getConfirmPasswordError();
-  setHelperText(confirmPasswordHelperText, error);
-  return error === "";
-}
-
-function isPasswordFormValid() {
-  return (
-    getPasswordError() === "" &&
-    getConfirmPasswordError() === ""
+  const values = readPasswordValues();
+  const message = getPasswordValidationMessage(
+    values.password,
+    values.passwordConfirm
   );
+
+  setHelperText(passwordHelperText, message);
+  return message === "";
 }
 
-function updatePasswordButtonState() {
-  userEditPasswordButton.disabled = !isPasswordFormValid();
+function validatePasswordConfirm() {
+  const values = readPasswordValues();
+  const message = getPasswordConfirmValidationMessage(
+    values.password,
+    values.passwordConfirm
+  );
+
+  setHelperText(passwordConfirmHelperText, message);
+  return message === "";
 }
 
-function savePassword() {
-  const currentUser = getCurrentUser();
-
-  if (!currentUser) {
-    setHelperText(
-      passwordHelperText,
-      "* 로그인 정보를 확인해주세요."
-    );
-    return false;
-  }
-
-  const updatedUser = {
-    ...currentUser,
-    password: userEditPassword.value
-  };
-  try {
-    updateCurrentUser(updatedUser);
-  } catch {
-    window.alert("비밀번호를 저장하지 못했습니다.");
-    return false;
-  }
-
-  return true;
+function updateSubmitButtonState() {
+  submitButton.disabled = !isPasswordFormValid(readPasswordValues());
 }
 
-userEditPassword.addEventListener("blur", function() {
+passwordInput.addEventListener("blur", function() {
   validatePassword();
 
-  if (userEditConfirmPassword.value !== "") {
-    validateConfirmPassword();
+  if (passwordConfirmInput.value !== "") {
+    validatePasswordConfirm();
   }
 });
 
-userEditConfirmPassword.addEventListener("blur", function() {
-  validateConfirmPassword();
+passwordConfirmInput.addEventListener("blur", function() {
+  validatePasswordConfirm();
   validatePassword();
 });
 
-[userEditPassword, userEditConfirmPassword].forEach(function(input) {
-  input.addEventListener("input", updatePasswordButtonState);
+[passwordInput, passwordConfirmInput].forEach(function(input) {
+  input.addEventListener("input", updateSubmitButtonState);
 });
 
-userEditPasswordForm.addEventListener("submit", function(event) {
+passwordForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
   const isValid = [
     validatePassword(),
-    validateConfirmPassword()
+    validatePasswordConfirm()
   ].every(Boolean);
 
-  updatePasswordButtonState();
-
-  if (!isValid || !savePassword()) {
+  if (!isValid) {
+    updateSubmitButtonState();
     return;
   }
 
-  userEditPasswordForm.reset();
-  setHelperText(passwordHelperText, "");
-  setHelperText(confirmPasswordHelperText, "");
-  updatePasswordButtonState();
-  showToast(userEditPasswordToast);
+  const userId = getAuthenticatedUserId();
+
+  if (!userId) {
+    setHelperText(passwordHelperText, "* 로그인 정보를 확인해주세요.");
+    return;
+  }
+
+  submitButton.disabled = true;
+
+  try {
+    await updateUserPassword(
+      userId,
+      createPasswordUpdatePayload(
+        passwordInput.value,
+        passwordConfirmInput.value
+      )
+    );
+    passwordForm.reset();
+    setHelperText(passwordHelperText, "");
+    setHelperText(passwordConfirmHelperText, "");
+    showToast(successToast);
+  } catch (error) {
+    setHelperText(passwordHelperText, error.message);
+  } finally {
+    updateSubmitButtonState();
+  }
 });
 
-updatePasswordButtonState();
+updateSubmitButtonState();

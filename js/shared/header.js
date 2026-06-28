@@ -1,4 +1,5 @@
 import { signOut } from "../api/user.js";
+import { clearAuthSession } from "./auth-session.js";
 
 class SiteHeader extends HTMLElement {
   connectedCallback() {
@@ -40,7 +41,7 @@ class SiteHeader extends HTMLElement {
 
       try {
         await signOut();
-        window.localStorage.removeItem("userId");
+        clearAuthSession();
         window.location.href = signOutLink.href;
       } catch (error) {
         signOutLink.removeAttribute("aria-disabled");
