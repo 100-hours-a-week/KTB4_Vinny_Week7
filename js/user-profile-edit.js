@@ -1,11 +1,5 @@
 import { getNicknameError as getNicknameValidationError } from "./utils/validation.js";
 import {
-  getCurrentUser,
-  getStoredUsers,
-  removeCurrentUser,
-  updateCurrentUser
-} from "./shared/storage.js";
-import {
   closeDialog,
   openDialog,
   setHelperText,
@@ -98,7 +92,7 @@ function saveUserChanges() {
   try {
     updateCurrentUser(updatedUser);
   } catch {
-    window.alert("회원정보를 저장하지 못했습니다. 더 작은 이미지를 선택해주세요.");
+    window.alert("회원정보를 저장하지 못했습니다.");
     return false;
   }
 

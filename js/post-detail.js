@@ -1,5 +1,4 @@
 import { formatPostCount } from "./utils/formatters.js";
-import { getCurrentUser } from "./shared/storage.js";
 import { closeDialog, openDialog } from "./utils/ui.js";
 
 const postDeleteButton = document.getElementById("post-delete-button");

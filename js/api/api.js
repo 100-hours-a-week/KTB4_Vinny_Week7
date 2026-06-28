@@ -14,6 +14,10 @@ export async function request(path, options = {}) {
     throw new Error(error.message || "요청에 실패했습니다.");
   }
 
+  if (response.status === 204) {
+    return;
+  }
+
   const apiResponse = await response.json();
 
   if (!apiResponse.success) {

@@ -2,10 +2,6 @@ import {
   getConfirmPasswordError as getConfirmPasswordValidationError,
   getPasswordError as getPasswordValidationError
 } from "./utils/validation.js";
-import {
-  getCurrentUser,
-  updateCurrentUser
-} from "./shared/storage.js";
 import { setHelperText, showToast } from "./utils/ui.js";
 
 const userEditPasswordForm = document.getElementById(

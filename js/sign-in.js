@@ -2,10 +2,6 @@ import {
   getEmailError as getEmailValidationError,
   getPasswordError as getPasswordValidationError
 } from "./utils/validation.js";
-import {
-  getStoredUsers,
-  setCurrentUser
-} from "./shared/storage.js";
 import { setHelperText } from "./utils/ui.js";
 import { signIn } from "./api/user.js";
 
@@ -68,10 +64,11 @@ signInForm.addEventListener("submit", async function (event) {
   signInButton.disabled = true;
 
   try {
-    await signIn({
+    const auth = await signIn({
       email: signInEmail.value,
       password: signInPassword.value
     });
+    window.localStorage.setItem("userId", JSON.stringify(auth.userId));
     window.location.href = "./posts.html";
   } catch (error) {
     setHelperText(passwordHelperText, error.message);
