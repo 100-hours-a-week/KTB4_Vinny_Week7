@@ -89,7 +89,7 @@ export function getNicknameError(
   return isDuplicated ? "* 중복된 닉네임입니다." : "";
 }
 
-export function getPostError(title, content, maxTitleLength = 100) {
+export function getPostError(title, content, maxTitleLength = 26) {
   if (title.trim() === "" || content.trim() === "") {
     return "* 제목, 내용을 모두 작성해주세요";
   }

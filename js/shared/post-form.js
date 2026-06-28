@@ -30,16 +30,27 @@ export function setupPostForm({
     input.addEventListener("input", updateButtonState);
   });
 
-  form.addEventListener("submit", function(event) {
+  form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const isValid = validate();
     updateButtonState();
 
     if (isValid) {
-      onSubmit();
+      submitButton.disabled = true;
+
+      try {
+        await onSubmit();
+      } finally {
+        updateButtonState();
+      }
     }
   });
 
   updateButtonState();
+
+  return {
+    updateButtonState,
+    validate
+  };
 }

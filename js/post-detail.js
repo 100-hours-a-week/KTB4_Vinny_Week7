@@ -1,6 +1,15 @@
+import { deletePost, getPost, likePost } from "./api/post.js";
+import { getAuthenticatedUserId } from "./shared/auth-session.js";
 import { formatPostCount } from "./utils/formatters.js";
 import { closeDialog, openDialog } from "./utils/ui.js";
 
+const postTitle = document.getElementById("post-title");
+const postAuthorAvatar = document.getElementById("post-author-avatar");
+const postAuthorName = document.getElementById("post-author-name");
+const postCreatedAt = document.getElementById("post-created-at");
+const postEditLink = document.getElementById("post-edit-link");
+const postImages = document.getElementById("post-images");
+const postContent = document.getElementById("post-content");
 const postDeleteButton = document.getElementById("post-delete-button");
 const postDeleteDialog = document.getElementById("post-delete-dialog");
 const postDeleteConfirmButton = document.getElementById(
@@ -13,12 +22,10 @@ const commentDeleteConfirmButton = document.getElementById(
   "comment-delete-confirm-button"
 );
 const dialogs = document.querySelectorAll("dialog.dialog");
-
 const likeButton = document.getElementById("like-button");
 const likeCount = document.getElementById("like-count");
 const viewCount = document.getElementById("view-count");
 const commentCount = document.getElementById("comment-count");
-
 const commentForm = document.getElementById("comment-form");
 const commentInput = document.getElementById("comment-input");
 const commentSubmitButton = document.getElementById(
@@ -29,14 +36,108 @@ const commentList = document.getElementById("comment-list");
 let editingComment = null;
 let deletingComment = null;
 
+function getPostIdFromUrl() {
+  return new URLSearchParams(window.location.search).get("postId");
+}
+
+function formatDateTime(value) {
+  return typeof value === "string"
+    ? value.replace("T", " ").slice(0, 19)
+    : "";
+}
+
 function renderPostCount(countElement) {
-  countElement.textContent = formatPostCount(countElement.dataset.postCount);
+  countElement.textContent = formatPostCount(
+    countElement.dataset.postCount
+  );
+}
+
+function setPostCount(countElement, count) {
+  countElement.dataset.postCount = String(count ?? 0);
+  renderPostCount(countElement);
 }
 
 function changeCount(countElement, amount) {
   const currentCount = Number(countElement.dataset.postCount);
-  countElement.dataset.postCount = String(Math.max(0, currentCount + amount));
-  renderPostCount(countElement);
+  setPostCount(countElement, Math.max(0, currentCount + amount));
+}
+
+function setLikeState(isLiked) {
+  likeButton.classList.toggle("is-liked", isLiked);
+  likeButton.setAttribute("aria-pressed", String(isLiked));
+}
+
+function renderPostImages(images) {
+  postImages.replaceChildren();
+
+  images.forEach(function(imageUrl) {
+    const imageFrame = document.createElement("div");
+    const image = document.createElement("img");
+    const fallbackText = document.createElement("span");
+
+    imageFrame.className = "post-detail__image-frame";
+    image.className = "post-detail__image";
+    image.alt = "게시글 이미지";
+    fallbackText.className = "post-detail__image-fallback";
+    fallbackText.textContent = "이미지를 불러올 수 없습니다.";
+
+    image.addEventListener("error", function() {
+      imageFrame.classList.add("is-error");
+      image.remove();
+    });
+
+    imageFrame.append(image, fallbackText);
+    postImages.append(imageFrame);
+
+    const normalizedImageUrl =
+      typeof imageUrl === "string" ? imageUrl.trim() : "";
+
+    if (normalizedImageUrl) {
+      image.src = normalizedImageUrl;
+    } else {
+      imageFrame.classList.add("is-error");
+      image.remove();
+    }
+  });
+}
+
+function renderPost(post, postId) {
+  postTitle.textContent = post.title || "";
+  postContent.textContent = post.content || "";
+  postAuthorName.textContent = post.author?.nickname || "알 수 없는 사용자";
+  postCreatedAt.dateTime = post.createdAt || "";
+  postCreatedAt.textContent = formatDateTime(post.createdAt);
+  postEditLink.href =
+    `./post-edit.html?postId=${encodeURIComponent(post.postId ?? postId)}`;
+
+  if (post.author?.profileImageUrl) {
+    postAuthorAvatar.style.backgroundImage =
+      `url("${post.author.profileImageUrl}")`;
+    postAuthorAvatar.style.backgroundPosition = "center";
+    postAuthorAvatar.style.backgroundSize = "cover";
+  }
+
+  renderPostImages(Array.isArray(post.images) ? post.images : []);
+  setLikeState(post.likes === true);
+  setPostCount(likeCount, post.likeCount);
+  setPostCount(viewCount, post.viewCount);
+  setPostCount(commentCount, post.commentCount);
+  document.title = `${post.title} | 아무 말 대잔치`;
+}
+
+async function loadPostDetail() {
+  const postId = getPostIdFromUrl();
+
+  if (!postId) {
+    postTitle.textContent = "게시글 정보를 확인해주세요.";
+    return;
+  }
+
+  try {
+    renderPost(await getPost(postId), postId);
+  } catch (error) {
+    postTitle.textContent = error.message;
+  }
 }
 
 function updateCommentButtonState() {
@@ -48,10 +149,6 @@ function resetCommentForm() {
   commentInput.value = "";
   commentSubmitButton.textContent = "댓글 등록";
   updateCommentButtonState();
-}
-
-function getCurrentNickname() {
-  return getCurrentUser()?.nickname || "데미 작성자 1";
 }
 
 function createCommentElement(content) {
@@ -67,13 +164,11 @@ function createCommentElement(content) {
 
   comment.className = "comment-item";
   comment.dataset.commentId = String(Date.now());
-
   authorLine.className = "author-line";
   avatar.className = "tiny-avatar";
-  author.textContent = getCurrentNickname();
+  author.textContent = "나";
   time.textContent = "방금 전";
   authorLine.append(avatar, author, time);
-
   actions.className = "comment-actions";
   editButton.className = "small-button comment-edit-button";
   editButton.type = "button";
@@ -82,20 +177,40 @@ function createCommentElement(content) {
   deleteButton.type = "button";
   deleteButton.textContent = "삭제";
   actions.append(editButton, deleteButton);
-
   body.className = "comment-item__body";
   body.textContent = content;
-
   comment.append(authorLine, actions, body);
+
   return comment;
 }
 
-[likeCount, viewCount, commentCount].forEach(renderPostCount);
+likeButton.addEventListener("click", async function() {
+  const postId = getPostIdFromUrl();
+  const userId = getAuthenticatedUserId();
 
-likeButton.addEventListener("click", function() {
-  const isLiked = likeButton.classList.toggle("is-liked");
-  likeButton.setAttribute("aria-pressed", String(isLiked));
-  changeCount(likeCount, isLiked ? 1 : -1);
+  if (!userId) {
+    window.alert("로그인이 필요합니다.");
+    return;
+  }
+
+  if (!postId) {
+    window.alert("게시글 정보를 확인해주세요.");
+    return;
+  }
+
+  likeButton.disabled = true;
+
+  try {
+    const response = await likePost(userId, postId);
+    const isLiked = response.likes === true;
+
+    setLikeState(isLiked);
+    changeCount(likeCount, isLiked ? 1 : -1);
+  } catch (error) {
+    window.alert(error.message);
+  } finally {
+    likeButton.disabled = false;
+  }
 });
 
 commentInput.addEventListener("input", updateCommentButtonState);
@@ -146,9 +261,24 @@ postDeleteButton.addEventListener("click", function() {
   openDialog(postDeleteDialog);
 });
 
-postDeleteConfirmButton.addEventListener("click", function() {
-  closeDialog(postDeleteDialog, "confirm");
-  window.location.href = "./posts.html";
+postDeleteConfirmButton.addEventListener("click", async function() {
+  const postId = getPostIdFromUrl();
+
+  if (!postId) {
+    window.alert("게시글 정보를 확인해주세요.");
+    return;
+  }
+
+  postDeleteConfirmButton.disabled = true;
+
+  try {
+    await deletePost(postId);
+    closeDialog(postDeleteDialog, "confirm");
+    window.location.href = "./posts.html";
+  } catch (error) {
+    postDeleteConfirmButton.disabled = false;
+    window.alert(error.message);
+  }
 });
 
 commentDeleteConfirmButton.addEventListener("click", function() {
@@ -186,3 +316,4 @@ dialogs.forEach(function(dialog) {
 });
 
 updateCommentButtonState();
+loadPostDetail();
