@@ -1,5 +1,5 @@
 .post-layout {
-  width: min(100%, 540px);
+  width: min(100%, var(--content-width));
 }
 
 .post-intro {
@@ -65,7 +65,7 @@
 
 .detail-layout,
 .edit-layout {
-  width: min(100%, 540px);
+  width: min(100%, var(--content-width));
 }
 
 .detail-layout hr {

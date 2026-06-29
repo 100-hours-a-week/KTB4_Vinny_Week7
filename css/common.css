@@ -1,6 +1,6 @@
 :root {
   --header-height: 72px;
-  --content-width: 540px;
+  --content-width: 480px;
   --radius: 10px;
 }
 
@@ -48,7 +48,7 @@ a {
 }
 
 .site-header__inner {
-  width: min(100%, 540px);
+  width: min(100%, var(--content-width));
   min-height: var(--header-height);
   margin: 0 auto;
   display: grid;
