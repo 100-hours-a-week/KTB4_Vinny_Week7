@@ -119,6 +119,16 @@ async function handleLikeClick() {
   const postId = getPostIdFromUrl();
   const userId = getUserId();
 
+  if (!userId) {
+    window.alert("로그인이 필요합니다.");
+    return;
+  }
+
+  if (!postId) {
+    window.alert("게시글 정보를 확인해주세요.");
+    return;
+  }
+
   likeButton.disabled = true;
 
   try {
@@ -140,6 +150,11 @@ function handlePostDeleteClick() {
 
 async function handlePostDeleteConfirm() {
   const postId = getPostIdFromUrl();
+
+  if (!postId) {
+    window.alert("게시글 정보를 확인해주세요.");
+    return;
+  }
 
   postDeleteConfirmButton.disabled = true;
 

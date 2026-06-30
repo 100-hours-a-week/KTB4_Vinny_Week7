@@ -47,7 +47,12 @@ const postFormController = setupPostForm({
 
 async function getPostForEdit() {
   const postId = getPostIdFromUrl();
-  
+
+  if (!postId) {
+    setHelperText(helperText, "* 게시글 정보를 확인해주세요.");
+    return;
+  }
+
   try {
     const post = await getPost(postId);
     titleInput.value = post.title || "";
