@@ -34,7 +34,7 @@ function initializeSignUpPage() {
 
   function getProfileImageError(profileImageUrl) {
     return profileImageUrl === ""
-      ? "*프로필 사진을 추가해주세요."
+      ? "* 프로필 사진을 추가해주세요."
       : "";
   }
 
@@ -49,8 +49,7 @@ function initializeSignUpPage() {
         values.password,
         values.passwordConfirm
       ),
-      nickname: getNicknameError(values.nickname),
-      profileImage: getProfileImageError(values.profileImageUrl)
+      nickname: getNicknameError(values.nickname)
     };
   }
 
