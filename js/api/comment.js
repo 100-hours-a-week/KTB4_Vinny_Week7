@@ -27,7 +27,7 @@ export function getComments(postId) {
  * @param {string} postId 
  * @param {string} commentId 
  * @param {import('../types/comment.js').CommentUpdateRequest} payload 
- * @returns {Promise<import('../types/comment.js').CommentResponse | void>}
+ * @returns {Promise<import('../types/comment.js').CommentResponse>}
  */
 
 export function updateComment(postId, commentId, payload) {
@@ -38,7 +38,6 @@ export function updateComment(postId, commentId, payload) {
 }
 
 /**
- * 
  * @param {string} postId 
  * @param {string} commentId 
  * @returns {Promise<void>}

@@ -1,8 +1,9 @@
 import { deletePost, getPost, likePost } from "./api/post.js";
-import { initializeCommentSection } from "./comment-section.js";
-import { getAuthenticatedUserId } from "./common/auth-session.js";
-import { formatPostCount } from "./utils/formatters.js";
+import { initializeComment } from "./comment.js";
+import { getUserId } from "./common/auth-storage.js";
+import { formatCount } from "./utils/format.js";
 import { closeDialog, openDialog } from "./common/ui.js";
+import { getPostIdFromUrl } from "./utils/url.js";
 
 const postTitle = document.getElementById("post-title");
 const postAuthorAvatar = document.getElementById("post-author-avatar");
@@ -21,12 +22,8 @@ const likeCount = document.getElementById("like-count");
 const viewCount = document.getElementById("view-count");
 const commentCount = document.getElementById("comment-count");
 
-function getPostIdFromUrl() {
-  return new URLSearchParams(window.location.search).get("postId");
-}
-
 function renderPostCount(countElement) {
-  countElement.textContent = formatPostCount(
+  countElement.textContent = formatCount(
     countElement.dataset.postCount
   );
 }
@@ -36,9 +33,9 @@ function setPostCount(countElement, count) {
   renderPostCount(countElement);
 }
 
-function changeCount(countElement, amount) {
+function changeCount(countElement, delta) {
   const currentCount = Number(countElement.dataset.postCount);
-  setPostCount(countElement, Math.max(0, currentCount + amount));
+  setPostCount(countElement, Math.max(0, currentCount + delta));
 }
 
 function setLikeState(isLiked) {
@@ -103,7 +100,7 @@ function renderPost(post, postId) {
   document.title = `${post.title} | 아무 말 대잔치`;
 }
 
-async function loadPostDetail() {
+async function getPostDetail() {
   const postId = getPostIdFromUrl();
 
   if (!postId) {
@@ -120,17 +117,7 @@ async function loadPostDetail() {
 
 async function handleLikeClick() {
   const postId = getPostIdFromUrl();
-  const userId = getAuthenticatedUserId();
-
-  if (!userId) {
-    window.alert("로그인이 필요합니다.");
-    return;
-  }
-
-  if (!postId) {
-    window.alert("게시글 정보를 확인해주세요.");
-    return;
-  }
+  const userId = getUserId();
 
   likeButton.disabled = true;
 
@@ -153,11 +140,6 @@ function handlePostDeleteClick() {
 
 async function handlePostDeleteConfirm() {
   const postId = getPostIdFromUrl();
-
-  if (!postId) {
-    window.alert("게시글 정보를 확인해주세요.");
-    return;
-  }
 
   postDeleteConfirmButton.disabled = true;
 
@@ -196,13 +178,13 @@ postDeleteDialog.addEventListener("close", handlePostDeleteDialogClose);
 
 const postId = getPostIdFromUrl();
 
-loadPostDetail();
+getPostDetail();
 
 if (postId) {
-  initializeCommentSection({
+  initializeComment({
     postId,
-    onCountChange(amount) {
-      changeCount(commentCount, amount);
+    onCommentCountChange(delta) {
+      changeCount(commentCount, delta);
     }
   });
 }

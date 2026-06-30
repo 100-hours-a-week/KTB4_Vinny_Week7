@@ -8,7 +8,7 @@ import { signUp } from "./api/user.js";
 import { setHelperText } from "./common/ui.js";
 
 function initializeSignUpPage() {
-  const registrationForm = document.getElementById("sign-up-form");
+  const signUpForm = document.getElementById("sign-up-form");
   const emailInput = document.getElementById("email");
   const emailHelperText = document.getElementById("email-helper-text");
   const passwordInput = document.getElementById("password");
@@ -38,7 +38,7 @@ function initializeSignUpPage() {
       : "";
   }
 
-  function getRegistrationErrors(values) {
+  function getSignUpErrors(values) {
     return {
       email: getEmailError(values.email),
       password: getPasswordError(
@@ -64,7 +64,7 @@ function initializeSignUpPage() {
     };
   }
 
-  function readRegistrationValues() {
+  function readSignUpFormValues() {
     return {
       email: emailInput.value,
       password: passwordInput.value,
@@ -74,15 +74,15 @@ function initializeSignUpPage() {
     };
   }
 
-  function isRegistrationFormValid(values) {
-    return Object.values(getRegistrationErrors(values)).every(
+  function isSignUpFormValid(values) {
+    return Object.values(getSignUpErrors(values)).every(
       (message) => message === ""
     );
   }
 
   function updateSubmitButtonState() {
-    submitButton.disabled = !isRegistrationFormValid(
-      readRegistrationValues()
+    submitButton.disabled = !isSignUpFormValid(
+      readSignUpFormValues()
     );
   }
 
@@ -168,11 +168,6 @@ function initializeSignUpPage() {
     reader.readAsDataURL(imageFile);
   }
 
-  profileImageInput.addEventListener("cancel", function() {
-    validateProfileImage();
-    updateSubmitButtonState();
-  });
-
   emailInput.addEventListener("blur", validateEmail);
   passwordInput.addEventListener("blur", function() {
     validatePassword();
@@ -196,7 +191,7 @@ function initializeSignUpPage() {
     input.addEventListener("input", updateSubmitButtonState);
   });
 
-  async function handleRegistrationSubmit(event) {
+  async function handleSignUpFormSubmit(event) {
     event.preventDefault();
 
     const isValid = [
@@ -215,7 +210,7 @@ function initializeSignUpPage() {
     submitButton.disabled = true;
 
     try {
-      await signUp(createSignUpPayload(readRegistrationValues()));
+      await signUp(createSignUpPayload(readSignUpFormValues()));
       window.location.href = "./sign-in.html";
     } catch (error) {
       window.alert(error.message);
@@ -224,8 +219,7 @@ function initializeSignUpPage() {
   }
 
   profileImageInput.addEventListener("change", handleProfileImageChange);
-  registrationForm.addEventListener("submit", handleRegistrationSubmit);
-  validateProfileImage();
+  signUpForm.addEventListener("submit", handleSignUpFormSubmit);
   updateSubmitButtonState();
 }
 

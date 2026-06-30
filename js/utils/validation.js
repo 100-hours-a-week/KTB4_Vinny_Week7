@@ -4,10 +4,7 @@ export const EMAIL_PATTERN =
 export const PASSWORD_PATTERN =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,20}$/;
 
-export function getEmailError(
-  email,
-  { users = [], checkDuplicate = false } = {}
-) {
+export function getEmailError(email) {
   if (email === "") {
     return "* 이메일을 입력해주세요";
   }
@@ -16,15 +13,7 @@ export function getEmailError(
     return "* 올바른 이메일 주소 형식을 입력해주세요 (예: example@example.com)";
   }
 
-  const isDuplicated =
-    checkDuplicate &&
-    users.some(
-      (user) =>
-        typeof user.email === "string" &&
-        user.email.toLowerCase() === email.toLowerCase()
-    );
-
-  return isDuplicated ? "* 중복된 이메일입니다." : "";
+  return "";
 }
 
 export function getPasswordError(password, confirmPassword = null) {
@@ -59,10 +48,7 @@ export function getConfirmPasswordError(password, confirmPassword) {
   return "";
 }
 
-export function getNicknameError(
-  nickname,
-  { users = [], currentUserId = null } = {}
-) {
+export function getNicknameError(nickname) {
   if (nickname === "") {
     return "* 닉네임을 입력해주세요";
   }
@@ -79,14 +65,7 @@ export function getNicknameError(
     return "* 닉네임은 최대 10자까지 작성 가능합니다.";
   }
 
-  const isDuplicated = users.some(
-    (user) =>
-      typeof user.nickname === "string" &&
-      user.nickname === nickname &&
-      user.id !== currentUserId
-  );
-
-  return isDuplicated ? "* 중복된 닉네임입니다." : "";
+  return "";
 }
 
 export function getPostError(title, content, maxTitleLength = 26) {

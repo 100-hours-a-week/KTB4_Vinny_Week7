@@ -4,7 +4,7 @@ import {
 } from "./utils/validation.js";
 import { setHelperText } from "./common/ui.js";
 import { signIn } from "./api/user.js";
-import { saveAuthSession } from "./common/auth-session.js";
+import { saveUser } from "./common/auth-storage.js";
 
 const signInForm = document.getElementById("sign-in-form");
 const emailInput = document.getElementById("email");
@@ -72,7 +72,7 @@ async function handleSignInSubmit(event) {
     const authSession = await signIn(
       createSignInPayload(emailInput.value, passwordInput.value)
     );
-    saveAuthSession(authSession);
+    saveUser(authSession);
     window.location.href = "./posts.html";
   } catch (error) {
     setHelperText(passwordHelperText, error.message);

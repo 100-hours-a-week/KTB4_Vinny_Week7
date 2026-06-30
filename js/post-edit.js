@@ -1,6 +1,7 @@
 import { getPost, updatePost } from "./api/post.js";
 import { setupPostForm } from "./post-form.js";
 import { setHelperText } from "./common/ui.js";
+import { getPostIdFromUrl } from "./utils/url.js";
 
 const postForm = document.getElementById("post-edit-form");
 const titleInput = document.getElementById("title");
@@ -9,21 +10,8 @@ const imageInput = document.getElementById("image");
 const helperText = document.getElementById("post-edit-helper-text");
 const submitButton = document.getElementById("post-edit-button");
 
-function getPostIdFromUrl() {
-  return new URLSearchParams(window.location.search).get("postId");
-}
-
 function createPostUpdatePayload(title, content, images) {
   return { title, content, images };
-}
-
-function updateBackLink(postId) {
-  const backLink = document.querySelector(".site-header .icon-button");
-
-  if (backLink) {
-    backLink.href =
-      `./post-detail.html?postId=${encodeURIComponent(postId)}`;
-  }
 }
 
 const postFormController = setupPostForm({
@@ -57,16 +45,9 @@ const postFormController = setupPostForm({
   }
 });
 
-async function loadPostForEdit() {
+async function getPostForEdit() {
   const postId = getPostIdFromUrl();
-
-  if (!postId) {
-    setHelperText(helperText, "* 게시글 정보를 확인해주세요.");
-    return;
-  }
-
-  updateBackLink(postId);
-
+  
   try {
     const post = await getPost(postId);
     titleInput.value = post.title || "";
@@ -77,4 +58,4 @@ async function loadPostForEdit() {
   }
 }
 
-loadPostForEdit();
+getPostForEdit();

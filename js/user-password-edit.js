@@ -4,7 +4,7 @@ import {
 } from "./utils/validation.js";
 import { setHelperText, showToast } from "./common/ui.js";
 import { updateUserPassword } from "./api/user.js";
-import { getAuthenticatedUserId } from "./common/auth-session.js";
+import { getUserId } from "./common/auth-storage.js";
 
 const passwordForm = document.getElementById("user-password-edit-form");
 const passwordInput = document.getElementById("password");
@@ -96,10 +96,10 @@ async function handlePasswordSubmit(event) {
     return;
   }
 
-  const userId = getAuthenticatedUserId();
+  const userId = getUserId();
 
   if (!userId) {
-    setHelperText(passwordHelperText, "* 로그인 정보를 확인해주세요.");
+    window.alert("* 로그인 정보를 확인해주세요.");
     return;
   }
 
@@ -118,7 +118,7 @@ async function handlePasswordSubmit(event) {
     setHelperText(passwordConfirmHelperText, "");
     showToast(successToast);
   } catch (error) {
-    setHelperText(passwordHelperText, error.message);
+    window.alert(error.message);
   } finally {
     updateSubmitButtonState();
   }

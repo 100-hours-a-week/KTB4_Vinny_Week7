@@ -4,7 +4,7 @@ import {
   getComments,
   updateComment
 } from "./api/comment.js";
-import { getAuthenticatedUserId } from "./common/auth-session.js";
+import { getUserId } from "./common/auth-storage.js";
 import { closeDialog, openDialog } from "./common/ui.js";
 
 function createCommentElement(commentData) {
@@ -49,9 +49,9 @@ function createCommentElement(commentData) {
   return comment;
 }
 
-export function initializeCommentSection({
+export function initializeComment({
   postId,
-  onCountChange
+  onCommentCountChange
 }) {
   const commentForm = document.getElementById("comment-form");
   const commentInput = document.getElementById("comment-input");
@@ -80,12 +80,16 @@ export function initializeCommentSection({
     updateButtonState();
   }
 
+  function renderCommentList(comments) {
+    commentList.replaceChildren(
+      ...comments.map(createCommentElement)
+    );
+  }
+
   async function loadComments() {
     try {
       const comments = await getComments(postId);
-      commentList.replaceChildren(
-        ...comments.map(createCommentElement)
-      );
+      renderCommentList(comments);
     } catch (error) {
       commentList.textContent = error.message;
     }
@@ -95,7 +99,7 @@ export function initializeCommentSection({
     event.preventDefault();
 
     const content = commentInput.value.trim();
-    const userId = getAuthenticatedUserId();
+    const userId = getUserId();
 
     if (content === "") {
       updateButtonState();
@@ -104,6 +108,7 @@ export function initializeCommentSection({
 
     if (!editingComment && !userId) {
       window.alert("로그인이 필요합니다.");
+      window.location.href = "./sign-in.html";
       return;
     }
 
@@ -132,7 +137,7 @@ export function initializeCommentSection({
           { content }
         );
         commentList.append(createCommentElement(createdComment));
-        onCountChange(1);
+        onCommentCountChange(1);
       }
 
       resetForm();
@@ -166,10 +171,6 @@ export function initializeCommentSection({
   }
 
   async function handleDeleteConfirm() {
-    if (!deletingComment) {
-      window.alert("댓글 정보를 확인해주세요.");
-      return;
-    }
 
     commentDeleteConfirmButton.disabled = true;
 
@@ -182,7 +183,7 @@ export function initializeCommentSection({
 
       deletingComment.remove();
       deletingComment = null;
-      onCountChange(-1);
+      onCommentCountChange(-1);
       closeDialog(commentDeleteDialog, "confirm");
     } catch (error) {
       window.alert(error.message);
@@ -222,7 +223,7 @@ export function initializeCommentSection({
   updateButtonState();
   loadComments();
 
-  return function destroyCommentSection() {
+  return function removeCommentEvents() {
     commentInput.removeEventListener("input", updateButtonState);
     commentForm.removeEventListener("submit", handleCommentSubmit);
     commentList.removeEventListener("click", handleCommentListClick);

@@ -1,17 +1,17 @@
 import { getPosts } from "./api/post.js";
-import { formatPostCount } from "./utils/formatters.js";
+import { formatCount } from "./utils/format.js";
 
 const postList = document.querySelector(".post-list");
 
 function createCountText(label, count) {
-  const fragment = document.createDocumentFragment();
+  const countText = document.createDocumentFragment();
   const countElement = document.createElement("span");
 
-  fragment.append(`${label} `);
-  countElement.textContent = formatPostCount(count);
-  fragment.append(countElement);
+  countText.append(`${label} `);
+  countElement.textContent = formatCount(count);
+  countText.append(countElement);
 
-  return fragment;
+  return countText;
 }
 
 function createPostCard(post) {

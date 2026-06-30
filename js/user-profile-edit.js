@@ -12,8 +12,8 @@ import {
 } from "./api/user.js";
 import {
   clearAuthSession,
-  getAuthenticatedUserId
-} from "./common/auth-session.js";
+  getUserId
+} from "./common/auth-storage.js";
 
 function initializeUserProfileEditPage() {
   const profileForm = document.getElementById("user-profile-edit-form");
@@ -95,7 +95,7 @@ function initializeUserProfileEditPage() {
   }
 
   async function loadUserProfile() {
-    const userId = getAuthenticatedUserId();
+    const userId = getUserId();
 
     if (!userId) {
       setHelperText(nicknameHelperText, "* 로그인 정보를 확인해주세요.");
@@ -106,15 +106,15 @@ function initializeUserProfileEditPage() {
       loadedUserProfile = await getUserInfo(userId);
       renderUserProfile(loadedUserProfile);
     } catch (error) {
-      setHelperText(nicknameHelperText, error.message);
+      window.alert(error.message);
     }
   }
 
   async function submitProfileUpdate() {
-    const userId = getAuthenticatedUserId();
+    const userId = getUserId();
 
     if (!userId || !loadedUserProfile) {
-      setHelperText(nicknameHelperText, "* 로그인 정보를 확인해주세요.");
+      window.alert("로그인 정보를 확인해주세요.");
       return false;
     }
 
@@ -142,13 +142,13 @@ function initializeUserProfileEditPage() {
 
       return true;
     } catch (error) {
-      setHelperText(nicknameHelperText, error.message);
+      window.alert(error.message);
       return false;
     }
   }
 
   async function withdrawAuthenticatedUser() {
-    const userId = getAuthenticatedUserId();
+    const userId = getUserId();
 
     if (!userId) {
       window.location.href = "./sign-in.html";

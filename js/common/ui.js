@@ -1,4 +1,4 @@
-const toastTimers = new WeakMap();
+let toastTimer;
 
 export function setHelperText(helper, message) {
   helper.textContent = message;
@@ -6,14 +6,12 @@ export function setHelperText(helper, message) {
 }
 
 export function showToast(toast, duration = 2000) {
-  window.clearTimeout(toastTimers.get(toast));
+  window.clearTimeout(toastTimer);
   toast.classList.add("toast--visible");
 
-  const timer = window.setTimeout(function() {
+  toastTimer = window.setTimeout(function() {
     toast.classList.remove("toast--visible");
   }, duration);
-
-  toastTimers.set(toast, timer);
 }
 
 export function openDialog(dialog) {
