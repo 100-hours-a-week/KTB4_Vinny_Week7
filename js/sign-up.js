@@ -209,8 +209,11 @@ function initializeSignUpPage() {
     submitButton.disabled = true;
 
     try {
-      await signUp(createSignUpPayload(readSignUpFormValues()));
-      window.location.href = "./sign-in.html";
+      const response = await signUp(createSignUpPayload(readSignUpFormValues()));
+
+      if (response !== undefined) {
+        window.location.href = "./sign-in.html";
+      }
     } catch (error) {
       window.alert(error.message);
       updateSubmitButtonState();

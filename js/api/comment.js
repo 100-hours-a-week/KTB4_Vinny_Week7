@@ -7,8 +7,8 @@ import { request } from "./api.js";
  * @returns {Promise<import('../types/comment.js').CommentResponse>}
  */
 
-export function createComment(userId, postId, payload) {
-  return request(`/users/${userId}/posts/${postId}/comments`, {
+export async function createComment(userId, postId, payload) {
+  return await request(`/users/${userId}/posts/${postId}/comments`, {
     method: "POST",
     body: JSON.stringify(payload)
   });
@@ -19,8 +19,8 @@ export function createComment(userId, postId, payload) {
  * @returns {Promise<import('../types/comment.js').CommentResponse[]>}
  */
 
-export function getComments(postId) {
-  return request(`/posts/${postId}/comments`);
+export async function getComments(postId) {
+  return await request(`/posts/${postId}/comments`);
 }
 
 /**
@@ -30,8 +30,8 @@ export function getComments(postId) {
  * @returns {Promise<import('../types/comment.js').CommentResponse>}
  */
 
-export function updateComment(postId, commentId, payload) {
-  return request(`/posts/${postId}/comments/${commentId}`, {
+export async function updateComment(postId, commentId, payload) {
+  return await request(`/posts/${postId}/comments/${commentId}`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
@@ -43,8 +43,8 @@ export function updateComment(postId, commentId, payload) {
  * @returns {Promise<void>}
  */
 
-export function deleteComment(postId, commentId) {
-  return request(`/posts/${postId}/comments/${commentId}`, {
+export async function deleteComment(postId, commentId) {
+  return await request(`/posts/${postId}/comments/${commentId}`, {
     method: "DELETE"
   });
 }

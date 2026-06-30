@@ -4,8 +4,8 @@ import { request } from "./api.js";
  * @returns {Promise<import('../types/user.js').UserIdResponse>}
  */
 
-export function signUp(payload) {
-  return request("/users/sign-up", {
+export async function signUp(payload) {
+  return await request("/users/sign-up", {
     method: "POST",
     body: JSON.stringify(payload)
   });
@@ -16,8 +16,8 @@ export function signUp(payload) {
  * @returns {Promise<import('../types/user.js').UserSignInResponse>}
  */
 
-export function signIn(payload) {
-  return request("/users/sign-in", {
+export async function signIn(payload) {
+  return await request("/users/sign-in", {
     method: "POST",
     body: JSON.stringify(payload)
   });
@@ -29,8 +29,8 @@ export function signIn(payload) {
  * @returns {Promise<import('../types/user.js').AuthorSummaryResponse>}
  */
 
-export function updateUserProfile(userId, payload) {
-  return request(`/users/${userId}/profile`, {
+export async function updateUserProfile(userId, payload) {
+  return await request(`/users/${userId}/profile`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
@@ -42,8 +42,8 @@ export function updateUserProfile(userId, payload) {
  * @returns {Promise<void>}
  */
 
-export function updateUserPassword(userId, payload) {
-  return request(`/users/${userId}/password`, {
+export async function updateUserPassword(userId, payload) {
+  return await request(`/users/${userId}/password`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
@@ -55,8 +55,8 @@ export function updateUserPassword(userId, payload) {
  * @returns {Promise<void>}
  */
 
-export function withdrawUser(userId, payload) {
-  return request(`/users/${userId}/withdraw`, {
+export async function withdrawUser(userId, payload) {
+  return await request(`/users/${userId}/withdraw`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
@@ -66,12 +66,12 @@ export function withdrawUser(userId, payload) {
  * @param {string} userId
  * @returns {Promise<import('../types/user.js').UserResponse>}
  */
-export function getUserInfo(userId) {
-  return request(`/users/${userId}`);
+export async function getUserInfo(userId) {
+  return await request(`/users/${userId}`);
 }
 
-export function signOut() {
-  return request("/users/sign-out", {
+export async function signOut() {
+  return await request("/users/sign-out", {
     method: "POST"
   });
 }

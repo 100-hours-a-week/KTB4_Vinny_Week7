@@ -18,8 +18,8 @@ function createPostFormData(payload) {
  * @returns {Promise<import('../types/post.js').PostDetailResponse>}
  */
 
-export function createPost(userId, payload) {
-  return request(`/users/${userId}/posts`, {
+export async function createPost(userId, payload) {
+  return await request(`/users/${userId}/posts`, {
     method: "POST",
     body: createPostFormData(payload)
   });
@@ -28,8 +28,8 @@ export function createPost(userId, payload) {
 /**
  * @returns {Promise<import('../types/post.js').PostListResponse[]>}
  */
-export function getPosts() {
-  return request("/posts");
+export async function getPosts() {
+  return await request("/posts");
 }
 
 /**
@@ -37,8 +37,8 @@ export function getPosts() {
  * @returns {Promise<import('../types/post.js').PostDetailResponse>}
  */
 
-export function getPost(postId) {
-  return request(`/posts/${postId}`);
+export async function getPost(postId) {
+  return await request(`/posts/${postId}`);
 }
 
 /**
@@ -47,8 +47,8 @@ export function getPost(postId) {
  * @returns {Promise<import('../types/post.js').PostDetailResponse>}
  */
 
-export function updatePost(postId, payload) {
-  return request(`/posts/${postId}`, {
+export async function updatePost(postId, payload) {
+  return await request(`/posts/${postId}`, {
     method: "PATCH",
     body: createPostFormData(payload)
   });
@@ -59,8 +59,8 @@ export function updatePost(postId, payload) {
  * @returns {Promise<void>}
  */
 
-export function deletePost(postId) {
-  return request(`/posts/${postId}`, {
+export async function deletePost(postId) {
+  return await request(`/posts/${postId}`, {
     method: "DELETE"
   });
 }
@@ -71,8 +71,8 @@ export function deletePost(postId) {
  * @returns {Promise<import('../types/post.js').PostLikeResponse>}
  */
 
-export function likePost(userId, postId) {
-  return request(`/users/${userId}/posts/${postId}/likes`, {
+export async function likePost(userId, postId) {
+  return await request(`/users/${userId}/posts/${postId}/likes`, {
     method: "POST"
   });
 }
