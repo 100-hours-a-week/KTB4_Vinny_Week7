@@ -1,6 +1,6 @@
 const AUTH_STORAGE_KEY = "auth";
 
-export function getAuthSession() {
+export function getAuth() {
   const savedUserInfo = localStorage.getItem(AUTH_STORAGE_KEY);
 
   if (!savedUserInfo) {
@@ -23,5 +23,5 @@ export function clearAuthSession() {
 }
 
 export function getUserId() {
-  return getAuthSession()?.userId ?? null;
+  return getAuth()?.userId ?? null;
 }

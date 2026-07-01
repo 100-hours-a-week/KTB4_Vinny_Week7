@@ -49,6 +49,33 @@ function createCommentElement(commentData) {
   return comment;
 }
 
+async function saveComment({
+  postId,
+  userId,
+  commentId,
+  content
+}) {
+  const payload = { content };
+
+  if (commentId) {
+    const commentData = await updateComment(
+      postId,
+      commentId,
+      payload
+    );
+
+    return { type: "update", commentData };
+  }
+
+  const commentData = await createComment(
+    userId,
+    postId,
+    payload
+  );
+
+  return { type: "create", commentData };
+}
+
 export function initializeComment({
   postId,
   onCommentCountChange
@@ -86,6 +113,25 @@ export function initializeComment({
     );
   }
 
+  function renderSavedComment(result, content) {
+    if (result.type === "create") {
+      commentList.append(createCommentElement(result.commentData));
+      onCommentCountChange(1);
+      return;
+    }
+
+    if (result.commentData?.commentId) {
+      editingComment.replaceWith(
+        createCommentElement(result.commentData)
+      );
+      return;
+    }
+
+    editingComment.querySelector(
+      ".comment-item__body"
+    ).textContent = content;
+  }
+
   async function loadComments() {
     try {
       const comments = await getComments(postId);
@@ -115,31 +161,14 @@ export function initializeComment({
     commentSubmitButton.disabled = true;
 
     try {
-      if (editingComment) {
-        const commentId = editingComment.dataset.commentId;
-        const updatedComment = await updateComment(
-          postId,
-          commentId,
-          { content }
-        );
+      const result = await saveComment({
+        postId,
+        userId,
+        commentId: editingComment?.dataset.commentId,
+        content
+      });
 
-        if (updatedComment?.commentId) {
-          editingComment.replaceWith(createCommentElement(updatedComment));
-        } else {
-          editingComment.querySelector(
-            ".comment-item__body"
-          ).textContent = content;
-        }
-      } else {
-        const createdComment = await createComment(
-          userId,
-          postId,
-          { content }
-        );
-        commentList.append(createCommentElement(createdComment));
-        onCommentCountChange(1);
-      }
-
+      renderSavedComment(result, content);
       resetForm();
     } catch (error) {
       window.alert(error.message);
@@ -171,7 +200,6 @@ export function initializeComment({
   }
 
   async function handleDeleteConfirm() {
-
     commentDeleteConfirmButton.disabled = true;
 
     try {
