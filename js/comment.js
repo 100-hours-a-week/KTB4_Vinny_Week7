@@ -156,7 +156,7 @@ export function initializeComment({
     }
   }
 
-  async function handleCommentSubmit(event) {
+async function handleCommentSubmit(event) {
     event.preventDefault();
 
     const content = commentInput.value.trim();
@@ -175,7 +175,16 @@ export function initializeComment({
         content
       });
 
-      renderSavedComment(result, content);
+      const responseData = result.commentData;
+
+      if (responseData) {
+        renderCommentList(getCommentList(responseData));
+        
+        if (responseData.commentCount !== undefined) {
+          onCommentCountChange(responseData.commentCount - parseInt(document.getElementById('comment-count')?.innerText || 0)); 
+        }
+      }
+
       resetForm();
     } catch (error) {
       window.alert(error.message);

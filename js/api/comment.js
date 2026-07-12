@@ -3,7 +3,7 @@ import { request } from "./api.js";
 /**
  * @param {string} postId 
  * @param {import('../types/comment.js').CommentCreateRequest} payload
- * @returns {Promise<import('../types/comment.js').CommentResponse>}
+ * @returns {Promise<import('../types/comment.js').CommentListResponse>}
  */
 
 export async function createComment(postId, payload) {
@@ -15,7 +15,7 @@ export async function createComment(postId, payload) {
 
 /**
  * @param {string} postId
- * @returns {Promise<import('../types/comment.js').CommentResponse[]>}
+ * @returns {Promise<import('../types/comment.js').CommentListResponse>}
  */
 
 export async function getComments(postId) {
@@ -26,7 +26,7 @@ export async function getComments(postId) {
  * @param {string} postId 
  * @param {string} commentId 
  * @param {import('../types/comment.js').CommentUpdateRequest} payload 
- * @returns {Promise<import('../types/comment.js').CommentResponse>}
+ * @returns {Promise<import('../types/comment.js').CommentListResponse>}
  */
 
 export async function updateComment(postId, commentId, payload) {
@@ -39,7 +39,7 @@ export async function updateComment(postId, commentId, payload) {
 /**
  * @param {string} postId 
  * @param {string} commentId 
- * @returns {Promise<void>}
+ * @returns {Promise<import('../types/comment.js').CommentListResponse>}
  */
 
 export async function deleteComment(postId, commentId) {
