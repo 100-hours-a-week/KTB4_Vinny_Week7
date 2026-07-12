@@ -42,6 +42,12 @@ export async function request(path, options = {}) {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem("auth");
+      alert("로그인 시간이 만료되었습니다. 다시 로그인해 주세요.");
+      window.location.href = "./login.html";
+    }
+
     const error = await response.json().catch(() => ({}));
     throw new Error(error.message || "요청에 실패했습니다.");
   }
