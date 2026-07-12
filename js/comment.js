@@ -4,8 +4,18 @@ import {
   getComments,
   updateComment
 } from "./api/comment.js";
-import { getUserId } from "./common/auth-storage.js";
 import { closeDialog, openDialog } from "./common/ui.js";
+
+function getCommentList(response) {
+  return Array.isArray(response?.comments) ? response.comments : [];
+}
+
+function getAuthorName(commentData) {
+  return (
+    commentData.author?.nickname ||
+    "알 수 없는 사용자"
+  );
+}
 
 function createCommentElement(commentData) {
   const comment = document.createElement("section");
@@ -13,17 +23,14 @@ function createCommentElement(commentData) {
   const avatar = document.createElement("span");
   const author = document.createElement("strong");
   const time = document.createElement("time");
-  const actions = document.createElement("div");
-  const editButton = document.createElement("button");
-  const deleteButton = document.createElement("button");
   const body = document.createElement("p");
+  const isOwner = Boolean(commentData.isOwner);
 
   comment.className = "comment-item";
   comment.dataset.commentId = commentData.commentId;
   authorLine.className = "author-line";
   avatar.className = "tiny-avatar";
-  author.textContent =
-    commentData.author?.nickname || "알 수 없는 사용자";
+  author.textContent = getAuthorName(commentData);
   time.textContent = commentData.createdAt || "";
 
   if (commentData.author?.profileImageUrl) {
@@ -34,24 +41,33 @@ function createCommentElement(commentData) {
   }
 
   authorLine.append(avatar, author, time);
-  actions.className = "comment-actions";
-  editButton.className = "small-button comment-edit-button";
-  editButton.type = "button";
-  editButton.textContent = "수정";
-  deleteButton.className = "small-button comment-delete-button";
-  deleteButton.type = "button";
-  deleteButton.textContent = "삭제";
-  actions.append(editButton, deleteButton);
+
   body.className = "comment-item__body";
   body.textContent = commentData.content;
-  comment.append(authorLine, actions, body);
+
+  if (isOwner) {
+    const actions = document.createElement("div");
+    const editButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
+
+    actions.className = "comment-actions";
+    editButton.className = "small-button comment-edit-button";
+    editButton.type = "button";
+    editButton.textContent = "수정";
+    deleteButton.className = "small-button comment-delete-button";
+    deleteButton.type = "button";
+    deleteButton.textContent = "삭제";
+    actions.append(editButton, deleteButton);
+    comment.append(authorLine, actions, body);
+  } else {
+    comment.append(authorLine, body);
+  }
 
   return comment;
 }
 
 async function saveComment({
   postId,
-  userId,
   commentId,
   content
 }) {
@@ -68,7 +84,6 @@ async function saveComment({
   }
 
   const commentData = await createComment(
-    userId,
     postId,
     payload
   );
@@ -114,16 +129,16 @@ export function initializeComment({
   }
 
   function renderSavedComment(result, content) {
+    const commentData = result.commentData;
+
     if (result.type === "create") {
-      commentList.append(createCommentElement(result.commentData));
+      commentList.append(createCommentElement(commentData));
       onCommentCountChange(1);
       return;
     }
 
-    if (result.commentData?.commentId) {
-      editingComment.replaceWith(
-        createCommentElement(result.commentData)
-      );
+    if (commentData?.commentId) {
+      editingComment.replaceWith(createCommentElement(commentData));
       return;
     }
 
@@ -134,8 +149,8 @@ export function initializeComment({
 
   async function loadComments() {
     try {
-      const comments = await getComments(postId);
-      renderCommentList(comments);
+      const response = await getComments(postId);
+      renderCommentList(getCommentList(response));
     } catch (error) {
       commentList.textContent = error.message;
     }
@@ -145,16 +160,9 @@ export function initializeComment({
     event.preventDefault();
 
     const content = commentInput.value.trim();
-    const userId = getUserId();
 
     if (content === "") {
       updateButtonState();
-      return;
-    }
-
-    if (!editingComment && !userId) {
-      window.alert("로그인이 필요합니다.");
-      window.location.href = "./sign-in.html";
       return;
     }
 
@@ -163,7 +171,6 @@ export function initializeComment({
     try {
       const result = await saveComment({
         postId,
-        userId,
         commentId: editingComment?.dataset.commentId,
         content
       });

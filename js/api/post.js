@@ -13,13 +13,12 @@ function createPostFormData(payload) {
 }
 
 /**
- * @param {string} userId
  * @param {import('../types/post.js').PostCreateRequest} payload
  * @returns {Promise<import('../types/post.js').PostDetailResponse>}
  */
 
-export async function createPost(userId, payload) {
-  return await request(`/users/${userId}/posts`, {
+export async function createPost(payload) {
+  return await request(`/posts`, {
     method: "POST",
     body: createPostFormData(payload)
   });
@@ -66,13 +65,12 @@ export async function deletePost(postId) {
 }
 
 /**
- * @param {string} userId 
  * @param {string} postId 
  * @returns {Promise<import('../types/post.js').PostLikeResponse>}
  */
 
-export async function likePost(userId, postId) {
-  return await request(`/users/${userId}/posts/${postId}/likes`, {
+export async function likePost(postId) {
+  return await request(`/posts/${postId}/likes`, {
     method: "POST"
   });
 }

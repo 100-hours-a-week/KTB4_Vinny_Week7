@@ -1,4 +1,4 @@
-import { signOut } from "../api/user.js";
+import { logout } from "../api/user.js";
 import { clearAuthSession } from "./auth-storage.js";
 
 function createHeader(element) {
@@ -18,7 +18,7 @@ function createHeader(element) {
         <div class="profile-menu__panel">
           <a class="profile-menu__item" href="./user-profile-edit.html">회원정보수정</a>
           <a class="profile-menu__item" href="./user-password-edit.html">비밀번호수정</a>
-          <a class="profile-menu__item" href="./sign-in.html" data-sign-out>로그아웃</a>
+          <a class="profile-menu__item" href="./login.html" data-logout>로그아웃</a>
         </div>
       </nav>
     `
@@ -40,26 +40,26 @@ function createHeader(element) {
   return header;
 }
 
-async function handleSignOut(event) {
+async function handleLogout(event) {
   event.preventDefault();
 
-  const signOutLink = event.currentTarget;
+  const logoutLink = event.currentTarget;
 
   try {
-    await signOut();
+    await logout();
     clearAuthSession();
-    window.location.href = signOutLink.href;
+    window.location.href = logoutLink.href;
   } catch (error) {
-    signOutLink.removeAttribute("aria-disabled");
+    logoutLink.removeAttribute("aria-disabled");
     window.alert(error.message);
   }
 }
 
-function signOutEvent(header) {
-  const signOutLink = header.querySelector("[data-sign-out]");
+function logoutEvent(header) {
+  const logoutLink = header.querySelector("[data-logout]");
 
-  if (signOutLink) {
-    signOutLink.addEventListener("click", handleSignOut);
+  if (logoutLink) {
+    logoutLink.addEventListener("click", handleLogout);
   }
 }
 
@@ -67,7 +67,7 @@ class SiteHeader extends HTMLElement {
   connectedCallback() {
     const header = createHeader(this);
 
-    signOutEvent(header);
+    logoutEvent(header);
     this.replaceWith(header);
   }
 }

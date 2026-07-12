@@ -3,15 +3,15 @@ import {
   getPasswordError as getPasswordValidationError
 } from "./utils/validation.js";
 import { setHelperText } from "./common/ui.js";
-import { signIn } from "./api/user.js";
+import { login } from "./api/user.js";
 import { saveUser } from "./common/auth-storage.js";
 
-const signInForm = document.getElementById("sign-in-form");
+const loginForm = document.getElementById("login-form");
 const emailInput = document.getElementById("email");
 const emailHelperText = document.getElementById("email-helper-text");
 const passwordInput = document.getElementById("password");
 const passwordHelperText = document.getElementById("password-helper-text");
-const submitButton = document.getElementById("sign-in-button");
+const submitButton = document.getElementById("login-button");
 
 function getEmailError() {
   return getEmailValidationError(emailInput.value);
@@ -33,26 +33,26 @@ function validatePassword() {
   return error === "";
 }
 
-function isSignInFormValid() {
+function isLoginFormValid() {
   return getEmailError() === "" && getPasswordError() === "";
 }
 
-function updateSignInButtonState() {
-  submitButton.disabled = !isSignInFormValid();
+function updateLoginButtonState() {
+  submitButton.disabled = !isLoginFormValid();
 }
 
-function createSignInPayload(email, password) {
+function createLoginPayload(email, password) {
   return { email, password };
 }
 
 [emailInput, passwordInput].forEach(function(input) {
-  input.addEventListener("input", updateSignInButtonState);
+  input.addEventListener("input", updateLoginButtonState);
 });
 
 emailInput.addEventListener("blur", validateEmail);
 passwordInput.addEventListener("blur", validatePassword);
 
-async function handleSignInSubmit(event) {
+async function handleLoginSubmit(event) {
   event.preventDefault();
 
   const isValid = [
@@ -60,7 +60,7 @@ async function handleSignInSubmit(event) {
     validatePassword()
   ].every(Boolean);
 
-  updateSignInButtonState();
+  updateLoginButtonState();
 
   if (!isValid) {
     return;
@@ -69,16 +69,16 @@ async function handleSignInSubmit(event) {
   submitButton.disabled = true;
 
   try {
-    const authSession = await signIn(
-      createSignInPayload(emailInput.value, passwordInput.value)
+    const authSession = await login(
+      createLoginPayload(emailInput.value, passwordInput.value)
     );
     saveUser(authSession);
     window.location.href = "./posts.html";
   } catch (error) {
     setHelperText(passwordHelperText, error.message);
-    updateSignInButtonState();
+    updateLoginButtonState();
   }
 }
 
-signInForm.addEventListener("submit", handleSignInSubmit);
-updateSignInButtonState();
+loginForm.addEventListener("submit", handleLoginSubmit);
+updateLoginButtonState();

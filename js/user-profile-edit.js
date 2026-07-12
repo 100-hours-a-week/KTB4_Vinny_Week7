@@ -12,7 +12,6 @@ import {
 } from "./api/user.js";
 import {
   clearAuthSession,
-  getUserId
 } from "./common/auth-storage.js";
 
 function createProfileUpdatePayload(
@@ -48,7 +47,6 @@ function isProfileFormValid(nickname) {
 }
 
 async function saveUserProfile(
-  userId,
   userProfile,
   nickname,
   profileImageUrl
@@ -58,13 +56,13 @@ async function saveUserProfile(
     nickname,
     profileImageUrl
   );
-  const response = await updateUserProfile(userId, payload);
+  const response = await updateUserProfile( payload);
 
   return mergeUserProfile(userProfile, payload, response);
 }
 
-async function withdrawAuthenticatedUser(userId) {
-  await withdrawUser(userId, createWithdrawPayload());
+async function withdrawAuthenticatedUser() {
+  await withdrawUser( createWithdrawPayload());
   clearAuthSession();
 }
 
@@ -125,15 +123,9 @@ function initializeUserProfileEditPage() {
   }
 
   async function loadUserProfile() {
-    const userId = getUserId();
-
-    if (!userId) {
-      setHelperText(nicknameHelperText, "* 로그인 정보를 확인해주세요.");
-      return;
-    }
 
     try {
-      loadedUserProfile = await getUserInfo(userId);
+      loadedUserProfile = await getUserInfo();
       renderUserProfile(loadedUserProfile);
     } catch (error) {
       window.alert(error.message);
@@ -179,18 +171,10 @@ function initializeUserProfileEditPage() {
       return;
     }
 
-    const userId = getUserId();
-
-    if (!userId || !loadedUserProfile) {
-      window.alert("로그인 정보를 확인해주세요.");
-      return;
-    }
-
     submitButton.disabled = true;
 
     try {
       loadedUserProfile = await saveUserProfile(
-        userId,
         loadedUserProfile,
         nicknameInput.value,
         selectedProfileImageUrl
@@ -214,18 +198,14 @@ function initializeUserProfileEditPage() {
   });
 
   async function handleWithdrawConfirm() {
-    const userId = getUserId();
-
-    if (!userId) {
-      window.location.href = "./sign-in.html";
-      return;
-    }
 
     closeDialog(withdrawDialog, "confirm");
 
     try {
-      await withdrawAuthenticatedUser(userId);
-      window.location.href = "./sign-in.html";
+      await withdrawAuthenticatedUser();
+      closeDialog(withdrawDialog, "confirm");
+      window.alert("회원 탈퇴가 완료되었습니다.");
+      window.location.href = "./login.html";
     } catch (error) {
       window.alert(error.message);
     }

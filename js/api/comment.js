@@ -1,14 +1,13 @@
 import { request } from "./api.js";
 
 /**
- * @param {string} userId 
  * @param {string} postId 
  * @param {import('../types/comment.js').CommentCreateRequest} payload
  * @returns {Promise<import('../types/comment.js').CommentResponse>}
  */
 
-export async function createComment(userId, postId, payload) {
-  return await request(`/users/${userId}/posts/${postId}/comments`, {
+export async function createComment(postId, payload) {
+  return await request(`/posts/${postId}/comments`, {
     method: "POST",
     body: JSON.stringify(payload)
   });

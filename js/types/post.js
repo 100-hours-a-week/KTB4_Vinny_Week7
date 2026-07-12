@@ -36,7 +36,8 @@
  * @property {number} likeCount
  * @property {number} commentCount
  * @property {number} viewCount
- * @property {boolean} [likes]
+ * @property {boolean} isOwner
+ * @property {boolean} isLiked
  * @property {import('./user.js').AuthorSummaryResponse} author
  */
 

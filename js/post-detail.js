@@ -1,6 +1,5 @@
 import { deletePost, getPost, likePost } from "./api/post.js";
 import { initializeComment } from "./comment.js";
-import { getUserId } from "./common/auth-storage.js";
 import { formatCount } from "./utils/format.js";
 import { closeDialog, openDialog } from "./common/ui.js";
 import { getPostIdFromUrl } from "./utils/url.js";
@@ -9,6 +8,7 @@ const postTitle = document.getElementById("post-title");
 const postAuthorAvatar = document.getElementById("post-author-avatar");
 const postAuthorName = document.getElementById("post-author-name");
 const postCreatedAt = document.getElementById("post-created-at");
+const postActions = document.getElementById("post-actions");
 const postEditLink = document.getElementById("post-edit-link");
 const postImages = document.getElementById("post-images");
 const postContent = document.getElementById("post-content");
@@ -21,6 +21,8 @@ const likeButton = document.getElementById("like-button");
 const likeCount = document.getElementById("like-count");
 const viewCount = document.getElementById("view-count");
 const commentCount = document.getElementById("comment-count");
+
+const postId = getPostIdFromUrl();
 
 function renderPostCount(countElement) {
   countElement.textContent = formatCount(
@@ -39,8 +41,12 @@ function changeCount(countElement, delta) {
 }
 
 function setLikeState(isLiked) {
-  likeButton.classList.toggle("is-liked", isLiked);
-  likeButton.setAttribute("aria-pressed", String(isLiked));
+  const isActive = isLiked === true;
+
+  likeButton.classList.toggle("is-liked", isActive);
+  likeButton.setAttribute("aria-pressed", String(isActive));
+  likeCount.classList.toggle("is-liked", isActive);
+  likeCount.setAttribute("aria-pressed", String(isActive));
 }
 
 function renderPostImages(images) {
@@ -78,10 +84,13 @@ function renderPostImages(images) {
 }
 
 function renderPost(post, postId) {
+  const isOwner = Boolean(post.isOwner);
+
   postTitle.textContent = post.title || "";
   postContent.textContent = post.content || "";
   postAuthorName.textContent = post.author?.nickname || "알 수 없는 사용자";
   postCreatedAt.textContent = post.createdAt || "";
+  postActions.hidden = !isOwner;
   postEditLink.href =
     `./post-edit.html?postId=${encodeURIComponent(post.postId ?? postId)}`;
 
@@ -93,7 +102,7 @@ function renderPost(post, postId) {
   }
 
   renderPostImages(Array.isArray(post.images) ? post.images : []);
-  setLikeState(post.likes === true);
+  setLikeState(post.isLiked === true || post.likes === true);
   setPostCount(likeCount, post.likeCount);
   setPostCount(viewCount, post.viewCount);
   setPostCount(commentCount, post.commentCount);
@@ -101,10 +110,10 @@ function renderPost(post, postId) {
 }
 
 async function getPostDetail() {
-  const postId = getPostIdFromUrl();
 
   if (!postId) {
-    postTitle.textContent = "게시글 정보를 확인해주세요.";
+    window.alert("게시글 정보를 확인해주세요.");
+    window.location.href = "./posts.html";
     return;
   }
 
@@ -116,13 +125,6 @@ async function getPostDetail() {
 }
 
 async function handleLikeClick() {
-  const postId = getPostIdFromUrl();
-  const userId = getUserId();
-
-  if (!userId) {
-    window.alert("로그인이 필요합니다.");
-    return;
-  }
 
   if (!postId) {
     window.alert("게시글 정보를 확인해주세요.");
@@ -132,8 +134,8 @@ async function handleLikeClick() {
   likeButton.disabled = true;
 
   try {
-    const response = await likePost(userId, postId);
-    const isLiked = response.likes === true;
+    const response = await likePost(postId);
+    const isLiked = response?.isLiked ?? response?.likes === true;
 
     setLikeState(isLiked);
     changeCount(likeCount, isLiked ? 1 : -1);
@@ -149,10 +151,10 @@ function handlePostDeleteClick() {
 }
 
 async function handlePostDeleteConfirm() {
-  const postId = getPostIdFromUrl();
 
   if (!postId) {
     window.alert("게시글 정보를 확인해주세요.");
+    window.location.href = "./posts.html";
     return;
   }
 
@@ -161,6 +163,7 @@ async function handlePostDeleteConfirm() {
   try {
     await deletePost(postId);
     closeDialog(postDeleteDialog, "confirm");
+    window.alert("게시글이 삭제되었습니다.");
     window.location.href = "./posts.html";
   } catch (error) {
     postDeleteConfirmButton.disabled = false;
@@ -190,8 +193,6 @@ postDeleteDialog
   });
 
 postDeleteDialog.addEventListener("close", handlePostDeleteDialogClose);
-
-const postId = getPostIdFromUrl();
 
 getPostDetail();
 

@@ -4,7 +4,6 @@ import {
 } from "./utils/validation.js";
 import { setHelperText, showToast } from "./common/ui.js";
 import { updateUserPassword } from "./api/user.js";
-import { getUserId } from "./common/auth-storage.js";
 
 const passwordForm = document.getElementById("user-password-edit-form");
 const passwordInput = document.getElementById("password");
@@ -96,18 +95,10 @@ async function handlePasswordSubmit(event) {
     return;
   }
 
-  const userId = getUserId();
-
-  if (!userId) {
-    window.alert("* 로그인 정보를 확인해주세요.");
-    return;
-  }
-
   submitButton.disabled = true;
 
   try {
     await updateUserPassword(
-      userId,
       createPasswordUpdatePayload(
         passwordInput.value,
         passwordConfirmInput.value

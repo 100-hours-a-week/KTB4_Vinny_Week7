@@ -212,7 +212,7 @@ function initializeSignUpPage() {
       const response = await signUp(createSignUpPayload(readSignUpFormValues()));
 
       if (response !== undefined) {
-        window.location.href = "./sign-in.html";
+        window.location.href = "./login.html";
       }
     } catch (error) {
       window.alert(error.message);

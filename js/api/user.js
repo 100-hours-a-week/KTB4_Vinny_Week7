@@ -1,77 +1,74 @@
 import { request } from "./api.js";
+
 /**
  * @param {import('../types/user.js').UserCreateRequest} payload
  * @returns {Promise<import('../types/user.js').UserIdResponse>}
  */
 
 export async function signUp(payload) {
-  return await request("/users/sign-up", {
+  return await request("/sign-up", {
     method: "POST",
     body: JSON.stringify(payload)
   });
 }
 
 /**
- * @param {import('../types/user.js').UserSignInRequest} payload
- * @returns {Promise<import('../types/user.js').UserSignInResponse>}
+ * @param {import('../types/user.js').UserLoginRequest} payload
+ * @returns {Promise<import('../types/user.js').UserLoginResponse>}
  */
 
-export async function signIn(payload) {
-  return await request("/users/sign-in", {
+export async function login(payload) {
+  return await request("/login", {
     method: "POST",
     body: JSON.stringify(payload)
   });
 }
 
 /**
- * @param {string} userId
  * @param {import('../types/user.js').UserUpdateProfileRequest} payload
- * @returns {Promise<import('../types/user.js').AuthorSummaryResponse>}
+ * @returns {Promise<import('../types/user.js').UserProfileResponse>}
  */
 
-export async function updateUserProfile(userId, payload) {
-  return await request(`/users/${userId}/profile`, {
+export async function updateUserProfile(payload) {
+  return await request(`/users/me/profile`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
 }
 
 /**
- * @param {string} userId
  * @param {import('../types/user.js').UserUpdatePasswordRequest} payload
  * @returns {Promise<void>}
  */
 
-export async function updateUserPassword(userId, payload) {
-  return await request(`/users/${userId}/password`, {
+export async function updateUserPassword(payload) {
+  return await request(`/users/me/password`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
 }
 
 /**
- * @param {string} userId
  * @param {import('../types/user.js').UserWithdrawRequest} payload
  * @returns {Promise<void>}
  */
 
-export async function withdrawUser(userId, payload) {
-  return await request(`/users/${userId}/withdraw`, {
+export async function withdrawUser(payload) {
+  return await request(`/users/me/withdraw`, {
     method: "PATCH",
     body: JSON.stringify(payload)
   });
 }
 
 /**
- * @param {string} userId
  * @returns {Promise<import('../types/user.js').UserResponse>}
  */
-export async function getUserInfo(userId) {
-  return await request(`/users/${userId}`);
+export async function getUserInfo() {
+  return await request(`/users/me`);
 }
 
-export async function signOut() {
-  return await request("/users/sign-out", {
+export async function logout() {
+  return await request("/logout", {
     method: "POST"
   });
 }

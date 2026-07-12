@@ -20,7 +20,7 @@
  */
 
 /**
- * @typedef {Object} UserSignInRequest
+ * @typedef {Object} UserLoginRequest
  * @property {string} email
  * @property {string} password
  */
@@ -40,7 +40,7 @@
  */
 
 /**
- * @typedef {Object} UserSignInResponse
+ * @typedef {Object} UserLoginResponse
  * @property {string} token
  * @property {string} userId
  */
@@ -48,6 +48,12 @@
 /**
  * @typedef {Object} UserIdResponse
  * @property {string} userId
+ */
+
+/**
+ * @typedef {Object} UserProfileResponse
+ * @property {string} nickname
+ * @property {string | null} profileImageUrl
  */
 
 /**

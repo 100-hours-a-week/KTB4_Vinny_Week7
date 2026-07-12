@@ -21,7 +21,3 @@ export function saveUser(session) {
 export function clearAuthSession() {
   localStorage.removeItem(AUTH_STORAGE_KEY);
 }
-
-export function getUserId() {
-  return getAuth()?.userId ?? null;
-}

@@ -1,5 +1,4 @@
 import { createPost } from "./api/post.js";
-import { getUserId } from "./common/auth-storage.js";
 import { setupPostForm } from "./post-form.js";
 import { setHelperText } from "./common/ui.js";
 
@@ -25,17 +24,10 @@ setupPostForm({
   helper: helperText,
   submitButton,
   async onSubmit() {
-    const userId = getUserId();
-
-    if (!userId) {
-      window.alert("로그인 정보를 확인해주세요.");
-      return;
-    }
 
     try {
       const images = getSelectedImages();
       const createdPost = await createPost(
-        userId,
         createPostPayload(
           titleInput.value,
           contentInput.value,
