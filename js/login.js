@@ -75,7 +75,7 @@ async function handleLoginSubmit(event) {
     saveUser(authSession);
     window.location.href = "./posts.html";
   } catch (error) {
-    setHelperText(passwordHelperText, error.message);
+    alert(error.message);
     updateLoginButtonState();
   }
 }

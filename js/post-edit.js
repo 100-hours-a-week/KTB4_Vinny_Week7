@@ -24,7 +24,7 @@ const postFormController = setupPostForm({
     const postId = getPostIdFromUrl();
 
     if (!postId) {
-      setHelperText(helperText, "* 게시글 정보를 확인해주세요.");
+      alert("게시글 정보를 확인할 수 없습니다.");
       return;
     }
 
@@ -40,7 +40,7 @@ const postFormController = setupPostForm({
       window.location.href =
         `./post-detail.html?postId=${encodeURIComponent(postId)}`;
     } catch (error) {
-      setHelperText(helperText, error.message);
+      alert(error.message);
     }
   }
 });
@@ -49,7 +49,7 @@ async function getPostForEdit() {
   const postId = getPostIdFromUrl();
 
   if (!postId) {
-    setHelperText(helperText, "* 게시글 정보를 확인해주세요.");
+    alert("게시글 정보를 확인할 수 없습니다.");
     return;
   }
 
@@ -59,7 +59,7 @@ async function getPostForEdit() {
     contentInput.value = post.content || "";
     postFormController.updateButtonState();
   } catch (error) {
-    setHelperText(helperText, error.message);
+    alert(error.message);
   }
 }
 

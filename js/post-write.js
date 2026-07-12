@@ -39,7 +39,7 @@ setupPostForm({
         ? `./post-detail.html?postId=${encodeURIComponent(createdPost.postId)}`
         : "./posts.html";
     } catch (error) {
-      setHelperText(helperText, error.message);
+      alert(error.message);
     }
   }
 });
