@@ -73,7 +73,7 @@ async function handleLoginSubmit(event) {
       createLoginPayload(emailInput.value, passwordInput.value)
     );
     saveUser(authSession);
-    window.location.href = "./posts.html";
+    window.location.href = "./movies.html";
   } catch (error) {
     alert(error.message);
     updateLoginButtonState();

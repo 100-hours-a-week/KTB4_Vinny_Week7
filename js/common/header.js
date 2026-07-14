@@ -1,15 +1,48 @@
 import { logout } from "../api/user.js";
-import { clearAuthSession } from "./auth-storage.js";
+import { clearAuthSession, getAuth } from "./auth-storage.js";
+
+function getProfileImageUrl(authSession) {
+  return (
+    authSession?.profileImageUrl ||
+    authSession?.user?.profileImageUrl ||
+    authSession?.userProfile?.profileImageUrl ||
+    ""
+  );
+}
+
+function renderProfileAvatar(header, authSession) {
+  const avatar = header.querySelector(".avatar");
+  const profileImageUrl = getProfileImageUrl(authSession);
+
+  if (!avatar || !profileImageUrl) {
+    return;
+  }
+
+  avatar.style.backgroundImage = `url("${profileImageUrl}")`;
+}
 
 function createHeader(element) {
   const backHref = element.getAttribute("back-href");
   const titleHref = element.getAttribute("title-href");
   const showProfile = element.hasAttribute("show-profile");
+  const showSearch = element.hasAttribute("show-search");
+  const loginLink = element.getAttribute("login-link");
+  const authSession = getAuth();
+  const shouldShowProfile = showProfile || Boolean(loginLink && authSession);
   const header = document.createElement("header");
   const title = titleHref
-    ? `<a class="site-header__title" href="${titleHref}">아무 말 대잔치</a>`
-    : '<h1 class="site-header__title">아무 말 대잔치</h1>';
-  const profileMenu = showProfile
+    ? `<a class="site-header__title" href="${titleHref}">CINEON</a>`
+    : '<h1 class="site-header__title">CINEON</h1>';
+  const search = showSearch
+    ? `
+      <label class="site-header__search">
+        <span class="visually-hidden">영화 검색</span>
+        <input data-movie-search type="search" placeholder="영화 제목을 검색해보세요" />
+        <span aria-hidden="true">⌕</span>
+      </label>
+    `
+    : "";
+  const profileMenu = shouldShowProfile
     ? `
       <nav class="profile-menu" aria-label="프로필 메뉴">
         <button class="icon-button" type="button" aria-label="프로필 메뉴 열기">
@@ -17,12 +50,28 @@ function createHeader(element) {
         </button>
         <div class="profile-menu__panel">
           <a class="profile-menu__item" href="./user-profile-edit.html">회원정보수정</a>
-          <a class="profile-menu__item" href="./user-password-edit.html">비밀번호수정</a>
           <a class="profile-menu__item" href="./login.html" data-logout>로그아웃</a>
         </div>
       </nav>
     `
-    : "<div></div>";
+    : loginLink
+      ? `<a class="site-header__login btn btn--primary btn--rounded" href="${loginLink}">로그인</a>`
+      : "<div></div>";
+
+  if (showSearch) {
+    header.className = "site-header";
+    header.innerHTML = `
+      <div class="site-header__inner site-header__inner--movie">
+        ${title}
+        ${search}
+        ${profileMenu}
+      </div>
+    `;
+
+    renderProfileAvatar(header, authSession);
+
+    return header;
+  }
 
   header.className = "site-header";
   header.innerHTML = `
@@ -36,6 +85,8 @@ function createHeader(element) {
       ${profileMenu}
     </div>
   `;
+
+  renderProfileAvatar(header, authSession);
 
   return header;
 }

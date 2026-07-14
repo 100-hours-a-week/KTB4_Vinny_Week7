@@ -1,16 +1,16 @@
 /**
- * @typedef {Object} CommentCreateRequest
+ * @typedef {Object} ReviewCreateRequest
  * @property {string} content
  */
 
 /**
- * @typedef {Object} CommentUpdateRequest
+ * @typedef {Object} ReviewUpdateRequest
  * @property {string} content
  */
 
 /**
- * @typedef {Object} CommentResponse
- * @property {string} commentId
+ * @typedef {Object} ReviewResponse
+ * @property {string} reviewId
  * @property {string} content
  * @property {string} createdAt
  * @property {string} updatedAt
@@ -19,9 +19,9 @@
  */
 
 /**
- * @typedef {Object} CommentListResponse
- * @property {number} commentCount
- * @property {CommentResponse[]} comments
+ * @typedef {Object} ReviewListResponse
+ * @property {number} reviewCount
+ * @property {ReviewResponse[]} reviews
  */
 
 export {};

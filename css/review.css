@@ -1,0 +1,36 @@
+.edit-layout {
+  width: min(100%, 560px);
+}
+
+.review__input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+.review__input::placeholder {
+  color: rgba(245, 247, 251, .42);
+}
+
+.review__input:focus {
+  outline: none;
+  border-color: var(--color-action-primary);
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, .12);
+}
+
+.file-input-box {
+  background-color: transparent;
+  padding: 6px 0;
+}
+
+.file-input-box input {
+  width: 100%;
+  font-size: 12px;
+}
+
+.edit-layout .btn {
+  margin-top: 8px;
+}

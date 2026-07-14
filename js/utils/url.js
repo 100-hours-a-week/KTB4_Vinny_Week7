@@ -1,3 +1,3 @@
-export function getPostIdFromUrl() {
-  return new URLSearchParams(window.location.search).get("postId");
+export function getMovieIdFromUrl() {
+  return new URLSearchParams(window.location.search).get("movieId");
 }

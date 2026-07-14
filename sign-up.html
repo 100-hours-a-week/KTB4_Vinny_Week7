@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>회원가입 | 아무 말 대잔치</title>
+  <title>회원가입 | CINEON</title>
   <link rel="stylesheet" href="./css/colors.css" />
   <link rel="stylesheet" href="./css/common.css" />
   <link rel="stylesheet" href="./css/auth.css" />
@@ -12,69 +12,90 @@
   <div class="page">
     <site-header back-href="./login.html"></site-header>
 
-    <main class="main">
-      <section class="auth-form" aria-labelledby="sign-up-title">
-        <h1 id="sign-up-title" class="section-title">회원가입</h1>
-        <div class="profile-upload">
-          <label class="profile-upload__label required" for="profile-image">프로필 사진</label>
-          <p id="profile-helper-text" class="helper profile-upload__helper"></p>
-          <input
-            id="profile-image"
-            class="profile-upload__input"
-            type="file"
-            accept="image/*"
-            aria-describedby="profile-helper-text"
-            required />
-          <button
-            id="profile-image-button"
-            class="profile-upload__preview"
-            type="button"
-            aria-label="프로필 사진 추가">
-            <img id="profile-image-preview" class="profile-upload__image" alt="선택한 프로필 사진" hidden />
-            <span id="profile-image-placeholder" aria-hidden="true">+</span>
-          </button>
-        </div>
-        <form id="sign-up-form" class="form form--sign-up" novalidate>
-          <div class="form-group">
-            <label class="label required" for="email">이메일</label>
-            <input id="email"
+    <main class="main main--auth">
+      <div class="auth-shell">
+        <section class="auth-form auth-form--signup" aria-labelledby="sign-up-title">
+          <h1 id="sign-up-title" class="section-title">회원가입</h1>
+          <p class="auth-form__summary">프로필을 만들고 영화 취향과 리뷰를 한 곳에 모아보세요.</p>
+          <div class="profile-upload">
+            <div>
+              <label class="profile-upload__label required" for="profile-image">프로필 사진</label>
+              <p id="profile-helper-text" class="helper profile-upload__helper"></p>
+            </div>
+            <input
+              id="profile-image"
+              class="profile-upload__input"
+              type="file"
+              accept="image/*"
+              aria-describedby="profile-helper-text"
+              required />
+            <button
+              id="profile-image-button"
+              class="profile-upload__preview"
+              type="button"
+              aria-label="프로필 사진 추가">
+              <img id="profile-image-preview" class="profile-upload__image" alt="선택한 프로필 사진" hidden />
+              <span id="profile-image-placeholder" aria-hidden="true">+</span>
+            </button>
+          </div>
+          <form id="sign-up-form" class="form form--sign-up" novalidate>
+            <div class="form-group">
+              <label class="label required" for="email">이메일</label>
+              <input id="email"
+                class="input"
+                type="email"
+                required
+                placeholder="이메일을 입력하세요" />
+              <p id="email-helper-text" class="helper"></p>
+            </div>
+            <div class="form-group">
+              <label class="label required" for="password">비밀번호</label>
+              <input id="password"
               class="input"
-              type="email"
+              type="password"
               required
-              placeholder="이메일을 입력하세요" />
-            <p id="email-helper-text" class="helper"></p>
+              placeholder="비밀번호를 입력하세요" />
+              <p id="password-helper-text" class="helper"></p>
+            </div>
+            <div class="form-group">
+              <label class="label required" for="password-confirm">비밀번호 확인</label>
+              <input id="password-confirm"
+              class="input"
+              type="password"
+              required
+              placeholder="비밀번호를 한번 더 입력하세요" />
+              <p id="confirm-password-helper-text" class="helper"></p>
+            </div>
+            <div class="form-group">
+              <label class="label required" for="nickname">닉네임</label>
+              <input id="nickname"
+              class="input"
+              type="text"
+              required
+              placeholder="닉네임을 입력하세요" />
+              <p id="nickname-helper-text" class="helper"></p>
+            </div>
+            <button id="sign-up-button" class="btn btn--primary btn--wide btn--rounded" type="submit" disabled>회원가입</button>
+          </form>
+          <a class="link-button" href="./login.html">이미 계정이 있나요? 로그인</a>
+        </section>
+        <aside class="auth-poster-panel auth-poster-panel--signup" aria-hidden="true">
+          <div class="auth-poster-panel__track auth-poster-panel__track--top">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <div class="form-group">
-            <label class="label required" for="password">비밀번호</label>
-            <input id="password"
-            class="input"
-            type="password"
-            required
-            placeholder="비밀번호를 입력하세요" />
-            <p id="password-helper-text" class="helper"></p>
+          <div class="auth-poster-panel__track auth-poster-panel__track--bottom">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <div class="form-group">
-            <label class="label required" for="password-confirm">비밀번호 확인</label>
-            <input id="password-confirm"
-            class="input"
-            type="password"
-            required
-            placeholder="비밀번호를 한번 더 입력하세요" />
-            <p id="confirm-password-helper-text" class="helper"></p>
+          <div class="auth-poster-panel__copy">
+            <strong>NEW MEMBER</strong>
+            <p>처음 남기는 별점부터 당신의 영화 취향이 시작됩니다.</p>
           </div>
-          <div class="form-group">
-            <label class="label required" for="nickname">닉네임</label>
-            <input id="nickname"
-            class="input"
-            type="text"
-            required
-            placeholder="닉네임을 입력하세요" />
-            <p id="nickname-helper-text" class="helper"></p>
-          </div>
-          <button id="sign-up-button" class="btn btn--primary btn--wide btn--rounded" type="submit" disabled>회원가입</button>
-        </form>
-        <a class="link-button" href="./login.html">로그인하러 가기</a>
-      </section>
+        </aside>
+      </div>
     </main>
   </div>
   <script type="module" src="./js/common/header.js"></script>

@@ -67,15 +67,3 @@ export function getNicknameError(nickname) {
 
   return "";
 }
-
-export function getPostError(title, content, maxTitleLength = 26) {
-  if (title.trim() === "" || content.trim() === "") {
-    return "* 제목, 내용을 모두 작성해주세요";
-  }
-
-  if (title.length > maxTitleLength) {
-    return `* 제목은 최대 ${maxTitleLength}자까지 작성 가능합니다.`;
-  }
-
-  return "";
-}

@@ -1,7 +1,7 @@
-import { getPostError } from "./utils/validation.js";
+import { getReviewError } from "./utils/validation.js";
 import { setHelperText } from "./common/ui.js";
 
-export function setupPostForm({
+export function setupReviewForm({
   form,
   titleInput,
   contentInput,
@@ -10,7 +10,7 @@ export function setupPostForm({
   onSubmit
 }) {
   function getError() {
-    return getPostError(titleInput.value, contentInput.value);
+    return getReviewError(titleInput.value, contentInput.value);
   }
 
   function validate() {

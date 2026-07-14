@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영화 상세 | CINEON</title>
+  <link rel="stylesheet" href="./css/colors.css" />
+  <link rel="stylesheet" href="./css/common.css" />
+  <link rel="stylesheet" href="./css/movie.css" />
+</head>
+<body>
+  <div class="page">
+    <site-header
+      title-href="./movies.html"
+      show-search
+      login-link="./login.html"></site-header>
+
+    <main class="movie-detail-page">
+      <nav class="movie-breadcrumb" aria-label="현재 위치">
+        <a href="./movies.html">홈</a>
+        <span aria-hidden="true">›</span>
+        <a href="./movies.html">영화</a>
+        <span aria-hidden="true">›</span>
+        <span id="breadcrumb-movie-title">영화</span>
+      </nav>
+
+      <section id="movie-detail-hero" class="movie-detail-hero" aria-labelledby="movie-title">
+        <img id="movie-poster" class="movie-detail-hero__poster" alt="" />
+        <div class="movie-detail-hero__content">
+          <h1 id="movie-title" class="movie-detail-hero__title"></h1>
+          <p id="movie-meta" class="movie-detail-hero__meta"></p>
+          <div class="movie-detail-hero__rating">
+            <span aria-hidden="true">★</span>
+            <strong id="movie-rating"></strong>
+            <small id="movie-rating-count"></small>
+          </div>
+          <p id="movie-description" class="movie-detail-hero__description"></p>
+        </div>
+      </section>
+
+      <section class="review-compose" aria-label="평점 및 리뷰 작성">
+        <div class="review-compose__rating">
+          <h2>내 평점 남기기</h2>
+          <div id="rating-stars" class="rating-stars" role="radiogroup" aria-label="내 평점">
+            <button type="button" data-rating="1" aria-label="1점">☆</button>
+            <button type="button" data-rating="2" aria-label="2점">☆</button>
+            <button type="button" data-rating="3" aria-label="3점">☆</button>
+            <button type="button" data-rating="4" aria-label="4점">☆</button>
+            <button type="button" data-rating="5" aria-label="5점">☆</button>
+          </div>
+          <p id="rating-helper">별점을 선택해주세요 (클릭)</p>
+        </div>
+
+        <form id="review-form" class="review-compose__form">
+          <label id="review-form-title" for="review-input">리뷰 작성하기</label>
+          <div class="review-compose__field">
+            <textarea
+              id="review-input"
+              maxlength="500"
+              placeholder="이 영화에 대한 생각을 자유롭게 남겨주세요!"></textarea>
+            <span id="review-count">0/500</span>
+          </div>
+          <button id="review-submit-button" class="btn btn--primary btn--rounded" type="submit">리뷰 등록</button>
+        </form>
+      </section>
+
+      <section class="movie-review-section" aria-labelledby="movie-review-title">
+        <div class="movie-review-section__header">
+          <h2 id="movie-review-title">리뷰 <span id="movie-review-count"></span></h2>
+        </div>
+        <div id="movie-review-list" class="movie-review-list"></div>
+      </section>
+    </main>
+
+    <dialog id="review-delete-dialog" class="dialog">
+      <h2 class="dialog__title">리뷰를 삭제하시겠어요?</h2>
+      <p class="dialog__text">삭제한 리뷰는 다시 복구할 수 없습니다.</p>
+      <form method="dialog" class="dialog__actions">
+        <button class="btn btn--dark btn--rounded" type="button" data-dialog-close value="cancel">취소</button>
+        <button id="review-delete-confirm-button" class="btn btn--primary btn--rounded" type="button">삭제</button>
+      </form>
+    </dialog>
+  </div>
+
+  <script type="module" src="./js/common/header.js"></script>
+  <script type="module" src="./js/movie-detail.js"></script>
+</body>
+</html>
