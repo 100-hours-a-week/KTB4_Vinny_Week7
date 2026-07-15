@@ -57,7 +57,7 @@
 .auth-form .section-title {
   margin-bottom: 12px;
   text-align: left;
-  font-size: clamp(34px, 4vw, 48px);
+  font-size: clamp(34px, 4vw, 40px);
   line-height: 1.08;
 }
 
@@ -130,7 +130,7 @@
 }
 
 .auth-form--signup .section-title {
-  font-size: clamp(30px, 4vw, 42px);
+  font-size: clamp(30px, 4vw, 40px);
 }
 
 .auth-form--signup .auth-form__summary {
@@ -143,12 +143,11 @@
 
 .profile-upload {
   width: 100%;
-  min-height: 76px;
+  min-height: 132px;
   margin: 0 0 18px;
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
-  align-items: center;
+  grid-template-columns: 1fr;
+  align-items: start;
   padding: 14px;
   border: 0;
   border-radius: 12px;
@@ -165,26 +164,18 @@
   font-weight: 700;
 }
 
-.profile-upload__helper {
-  height: 14px;
-  min-height: 14px;
-  margin-bottom: 0;
-}
-
 .profile-upload__input {
   display: none;
 }
 
 .profile-upload__preview {
-  width: 58px;
-  height: 58px;
+  width: 110px;
+  height: 110px;
   padding: 0;
   margin: 0 auto;
   border: 0;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 28%, rgba(204, 255, 0, .28), transparent 34%),
-    var(--color-surface-hover);
+  background: var(--color-surface-hover);
   color: var(--color-text-primary);
   overflow: hidden;
   display: grid;

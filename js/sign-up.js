@@ -26,18 +26,9 @@ function initializeSignUpPage() {
   const profileImagePlaceholder = document.getElementById(
     "profile-image-placeholder"
   );
-  const profileImageHelperText = document.getElementById(
-    "profile-helper-text"
-  );
 
   let selectedProfileImageFile = null;
   let selectedProfileImageUrl = "";
-
-  function getProfileImageError(profileImageFile) {
-    return !profileImageFile
-      ? "* 프로필 사진을 추가해주세요."
-      : "";
-  }
 
   function getSignUpErrors(values) {
     return {
@@ -75,8 +66,7 @@ function initializeSignUpPage() {
   }
 
   function isSignUpFormValid(values) {
-    const hasImage = values.profileImageFile !== null;
-    return hasImage && Object.values(getSignUpErrors(values)).every(
+    return Object.values(getSignUpErrors(values)).every(
       (message) => message === ""
     );
   }
@@ -117,18 +107,11 @@ function initializeSignUpPage() {
     return message === "";
   }
 
-  function validateProfileImage() {
-    const message = getProfileImageError(selectedProfileImageFile);
-    setHelperText(profileImageHelperText, message);
-    return message === "";
-  }
-
   function renderProfileImage(dataUrl) {
     selectedProfileImageUrl = dataUrl;
     profileImagePreview.src = dataUrl;
     profileImagePreview.hidden = false;
     profileImagePlaceholder.hidden = true;
-    setHelperText(profileImageHelperText, "");
     updateSubmitButtonState();
   }
 
@@ -140,16 +123,11 @@ function initializeSignUpPage() {
     const [imageFile] = profileImageInput.files;
 
     if (!imageFile) {
-      validateProfileImage();
-      return;
-    }
-
-    if (!imageFile.type.startsWith("image/")) {
-      profileImageInput.value = "";
-      setHelperText(
-        profileImageHelperText,
-        "* 이미지 파일을 선택해주세요."
-      );
+      selectedProfileImageFile = null;
+      selectedProfileImageUrl = "";
+      profileImagePreview.removeAttribute("src");
+      profileImagePreview.hidden = true;
+      profileImagePlaceholder.hidden = false;
       updateSubmitButtonState();
       return;
     }
@@ -161,10 +139,6 @@ function initializeSignUpPage() {
       renderProfileImage(reader.result);
     });
     reader.addEventListener("error", function() {
-      setHelperText(
-        profileImageHelperText,
-        "* 이미지를 불러오지 못했습니다."
-      );
       updateSubmitButtonState();
     });
     reader.readAsDataURL(imageFile);
@@ -200,8 +174,7 @@ function initializeSignUpPage() {
       validateEmail(),
       validatePassword(),
       validatePasswordConfirm(),
-      validateNickname(),
-      validateProfileImage()
+      validateNickname()
     ].every(Boolean);
 
     if (!isValid) {
