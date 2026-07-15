@@ -4,7 +4,7 @@
  * @property {string} password
  * @property {string} passwordConfirm
  * @property {string} nickname
- * @property {string} profileImageUrl
+ * @property {File | string | null} profileImageUrl
  */
 
 /**
@@ -16,7 +16,7 @@
 /**
  * @typedef {Object} UserUpdateProfileRequest
  * @property {string} nickname
- * @property {string} profileImageUrl
+ * @property {File | string | null} profileImageUrl
  */
 
 /**
@@ -36,7 +36,7 @@
  * @property {string} id
  * @property {string} email
  * @property {string} nickname
- * @property {string | null} profileImageUrl
+ * @property {File | null} profileImageUrl
  */
 
 /**
@@ -53,13 +53,13 @@
 /**
  * @typedef {Object} UserProfileResponse
  * @property {string} nickname
- * @property {string | null} profileImageUrl
+ * @property {File | null} profileImageUrl
  */
 
 /**
  * @typedef {Object} AuthorSummaryResponse
  * @property {string} nickname
- * @property {string | null} profileImageUrl
+ * @property {File | null} profileImageUrl
  */
 
 export {};

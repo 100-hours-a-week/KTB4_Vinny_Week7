@@ -12,7 +12,10 @@ import {
 } from "./api/user.js";
 import {
   clearAuthSession,
+  getAuth,
+  saveUser
 } from "./common/auth-storage.js";
+import { getFullImageUrl, setBackgroundImage } from "./utils/image.js";
 
 function createProfileUpdatePayload(
   userProfile,
@@ -70,8 +73,7 @@ function updateHeaderAvatar(profileImageUrl) {
   const headerAvatar = document.querySelector(".avatar");
 
   if (headerAvatar && profileImageUrl) {
-    headerAvatar.style.backgroundImage =
-      `url("${profileImageUrl}")`;
+    setBackgroundImage(headerAvatar, profileImageUrl);
   }
 }
 
@@ -94,7 +96,8 @@ function initializeUserProfileEditPage() {
   );
 
   let loadedUserProfile = null;
-  let selectedProfileImageUrl = "";
+  let selectedImageFile = null;
+  let displayImageUrl = null;
 
   function updateSubmitButtonState() {
     submitButton.disabled = !isProfileFormValid(nicknameInput.value);
@@ -106,9 +109,12 @@ function initializeUserProfileEditPage() {
     return message === "";
   }
 
-  function renderProfileImage(profileImageUrl) {
-    selectedProfileImageUrl = profileImageUrl;
-    profileImageButton.style.backgroundImage = `url("${profileImageUrl}")`;
+  function renderProfileImage(imageUrl) {
+    displayImageUrl = imageUrl;
+    const fullUrl = imageUrl && imageUrl.startsWith("/") 
+      ? getFullImageUrl(imageUrl)
+      : imageUrl;
+    profileImageButton.style.backgroundImage = `url("${fullUrl}")`;
   }
 
   function renderUserProfile(userProfile) {
@@ -152,6 +158,7 @@ function initializeUserProfileEditPage() {
       return;
     }
 
+    selectedImageFile = imageFile;
     const reader = new FileReader();
 
     reader.addEventListener("load", function() {
@@ -177,11 +184,20 @@ function initializeUserProfileEditPage() {
       loadedUserProfile = await saveUserProfile(
         loadedUserProfile,
         nicknameInput.value,
-        selectedProfileImageUrl
+        selectedImageFile
       );
       renderUserProfile(loadedUserProfile);
       updateHeaderAvatar(loadedUserProfile.profileImageUrl);
       showToast(successToast);
+      
+      const currentAuth = getAuth();
+      if (currentAuth) {
+        const updatedAuth = {
+          ...currentAuth,
+          ...loadedUserProfile
+        };
+        saveUser(updatedAuth);
+      }
     } catch (error) {
       window.alert(error.message);
     } finally {

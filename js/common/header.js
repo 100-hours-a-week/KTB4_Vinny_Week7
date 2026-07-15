@@ -1,13 +1,15 @@
 import { logout } from "../api/user.js";
 import { clearAuthSession, getAuth } from "./auth-storage.js";
+import { getFullImageUrl, setBackgroundImage } from "../utils/image.js";
 
 function getProfileImageUrl(authSession) {
-  return (
+  const imageUrl =
     authSession?.profileImageUrl ||
     authSession?.user?.profileImageUrl ||
     authSession?.userProfile?.profileImageUrl ||
-    ""
-  );
+    "";
+  
+  return getFullImageUrl(imageUrl);
 }
 
 function renderProfileAvatar(header, authSession) {
@@ -18,7 +20,7 @@ function renderProfileAvatar(header, authSession) {
     return;
   }
 
-  avatar.style.backgroundImage = `url("${profileImageUrl}")`;
+  setBackgroundImage(avatar, profileImageUrl);
 }
 
 function createHeader(element) {

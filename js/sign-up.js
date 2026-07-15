@@ -30,10 +30,11 @@ function initializeSignUpPage() {
     "profile-helper-text"
   );
 
+  let selectedProfileImageFile = null;
   let selectedProfileImageUrl = "";
 
-  function getProfileImageError(profileImageUrl) {
-    return profileImageUrl === ""
+  function getProfileImageError(profileImageFile) {
+    return !profileImageFile
       ? "* 프로필 사진을 추가해주세요."
       : "";
   }
@@ -59,7 +60,7 @@ function initializeSignUpPage() {
       password: values.password,
       passwordConfirm: values.passwordConfirm,
       nickname: values.nickname,
-      profileImageUrl: values.profileImageUrl
+      profileImageUrl: values.profileImageFile
     };
   }
 
@@ -69,12 +70,13 @@ function initializeSignUpPage() {
       password: passwordInput.value,
       passwordConfirm: passwordConfirmInput.value,
       nickname: nicknameInput.value,
-      profileImageUrl: selectedProfileImageUrl
+      profileImageFile: selectedProfileImageFile
     };
   }
 
   function isSignUpFormValid(values) {
-    return Object.values(getSignUpErrors(values)).every(
+    const hasImage = values.profileImageFile !== null;
+    return hasImage && Object.values(getSignUpErrors(values)).every(
       (message) => message === ""
     );
   }
@@ -116,14 +118,14 @@ function initializeSignUpPage() {
   }
 
   function validateProfileImage() {
-    const message = getProfileImageError(selectedProfileImageUrl);
+    const message = getProfileImageError(selectedProfileImageFile);
     setHelperText(profileImageHelperText, message);
     return message === "";
   }
 
-  function renderProfileImage(profileImageUrl) {
-    selectedProfileImageUrl = profileImageUrl;
-    profileImagePreview.src = profileImageUrl;
+  function renderProfileImage(dataUrl) {
+    selectedProfileImageUrl = dataUrl;
+    profileImagePreview.src = dataUrl;
     profileImagePreview.hidden = false;
     profileImagePlaceholder.hidden = true;
     setHelperText(profileImageHelperText, "");
@@ -152,6 +154,7 @@ function initializeSignUpPage() {
       return;
     }
 
+    selectedProfileImageFile = imageFile;
     const reader = new FileReader();
 
     reader.addEventListener("load", function() {
