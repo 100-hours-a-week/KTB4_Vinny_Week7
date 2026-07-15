@@ -1,12 +1,18 @@
-import { featuredMovie, movies, reviews } from "./data/movies.js";
+import { movies } from "./data/movies.js";
 
 const hero = document.getElementById("featured-movie");
 const movieList = document.getElementById("movie-list");
 const reviewList = document.getElementById("review-list");
 const searchInput = document.querySelector("[data-movie-search]");
-const heroMovies = [featuredMovie, ...movies];
+const movieHome = document.querySelector(".movie-home");
+const movieSectionTitle = document.getElementById("popular-movies-title");
+const movieSectionMore = document.querySelector(".movie-section__more");
+const searchParams = new URLSearchParams(window.location.search);
+const isAllMoviesView = searchParams.get("view") === "all";
+const heroMovies = movies.slice(0, 5);
+const mainMovies = movies.slice(5, 10);
+const pageMovies = isAllMoviesView ? movies : mainMovies;
 const movieById = new Map([
-  [featuredMovie.movieId, featuredMovie],
   ...movies.map(function(movie) {
     return [movie.movieId, movie];
   })
@@ -209,12 +215,15 @@ function renderMovies(movieItems) {
 }
 
 function renderReviews(reviewItems) {
+  if (!reviewList) {
+    return;
+  }
   reviewList.replaceChildren(...reviewItems.map(createReviewCard));
 }
 
 function handleMovieSearch(event) {
   const keyword = event.target.value.trim().toLowerCase();
-  const filteredMovies = movies.filter(function(movie) {
+  const filteredMovies = pageMovies.filter(function(movie) {
     return [
       movie.title,
       movie.originalTitle,
@@ -228,20 +237,27 @@ function handleMovieSearch(event) {
   renderMovies(filteredMovies);
 }
 
-showHero(activeHeroIndex);
-renderMovies(movies);
-renderReviews(reviews);
-restartHeroAutoplay();
+if (isAllMoviesView) {
+  movieHome.classList.add("movie-home--all");
+  movieSectionTitle.textContent = "전체 영화";
+  movieSectionMore.hidden = true;
+} else {
+  showHero(activeHeroIndex);
+  restartHeroAutoplay();
+
+  hero.addEventListener("click", handleHeroClick);
+  hero.addEventListener("pointerdown", handleHeroPointerDown);
+  hero.addEventListener("pointerup", handleHeroPointerUp);
+  hero.addEventListener("pointercancel", handleHeroPointerCancel);
+  hero.addEventListener("mouseenter", function() {
+    window.clearInterval(heroAutoplayId);
+  });
+  hero.addEventListener("mouseleave", restartHeroAutoplay);
+}
+
+renderMovies(pageMovies);
+renderReviews([]);
 
 if (searchInput) {
   searchInput.addEventListener("input", handleMovieSearch);
 }
-
-hero.addEventListener("click", handleHeroClick);
-hero.addEventListener("pointerdown", handleHeroPointerDown);
-hero.addEventListener("pointerup", handleHeroPointerUp);
-hero.addEventListener("pointercancel", handleHeroPointerCancel);
-hero.addEventListener("mouseenter", function() {
-  window.clearInterval(heroAutoplayId);
-});
-hero.addEventListener("mouseleave", restartHeroAutoplay);

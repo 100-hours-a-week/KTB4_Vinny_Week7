@@ -1,7 +1,8 @@
 import { closeDialog, openDialog } from "./common/ui.js";
-import { featuredMovie, movies, reviews } from "./data/movies.js";
+import { movies, reviews } from "./data/movies.js";
 
-const movieItems = [featuredMovie, ...movies];
+const featuredMovie = movies[0];
+const movieItems = movies;
 const movieById = new Map(
   movieItems.map(function(movie) {
     return [movie.movieId, movie];
@@ -60,11 +61,9 @@ function createStarText(rating) {
 }
 
 function getMovieReviews(movie) {
-  const matchedReviews = reviews.filter(function(review) {
+  return reviews.filter(function(review) {
     return review.movieId === movie.movieId;
   });
-
-  return matchedReviews.length > 1 ? matchedReviews : reviews;
 }
 
 function renderMovie(movie) {
@@ -156,7 +155,16 @@ function renderReviews(movie) {
   currentMovieReviews = getMovieReviews(movie);
 
   movieReviewCount.textContent =
-    `${formatNumber(movie.reviewCount ?? currentMovieReviews.length)}개`;
+    `${formatNumber(currentMovieReviews.length)}개`;
+
+  if (currentMovieReviews.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "movie-empty movie-empty--reviews";
+    emptyMessage.textContent = "아직 등록된 리뷰가 없습니다.";
+    movieReviewList.replaceChildren(emptyMessage);
+    return;
+  }
+
   movieReviewList.replaceChildren(
     ...currentMovieReviews.map(createReviewElement)
   );
@@ -274,9 +282,18 @@ function handleReviewDeleteConfirm() {
     return review.reviewId !== deletingReviewId;
   });
   movieReviewCount.textContent = `${formatNumber(currentMovieReviews.length)}개`;
-  movieReviewList.replaceChildren(
-    ...currentMovieReviews.map(createReviewElement)
-  );
+
+  if (currentMovieReviews.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "movie-empty movie-empty--reviews";
+    emptyMessage.textContent = "아직 등록된 리뷰가 없습니다.";
+    movieReviewList.replaceChildren(emptyMessage);
+  } else {
+    movieReviewList.replaceChildren(
+      ...currentMovieReviews.map(createReviewElement)
+    );
+  }
+
   deletingReviewId = null;
   closeDialog(reviewDeleteDialog, "confirm");
 }
