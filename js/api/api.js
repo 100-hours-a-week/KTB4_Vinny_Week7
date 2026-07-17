@@ -1,5 +1,13 @@
 export const API_BASE_URL = "http://localhost:8080";
 
+function redirectToLogin(message) {
+  localStorage.removeItem("auth");
+  alert(message);
+  window.location.href = "./login.html";
+
+  return new Promise(function() {});
+}
+
 export async function request(path, options = {}) {
   const headers = new Headers(options.headers);
   const hasBody = options.body !== undefined && options.body !== null;
@@ -15,9 +23,7 @@ export async function request(path, options = {}) {
     const authData = localStorage.getItem("auth");
     
     if (!authData) {
-      alert("로그인이 필요한 서비스입니다.");
-      window.location.href = "./login.html";
-      throw new Error("인증 정보가 없습니다.");
+      return redirectToLogin("로그인이 필요한 서비스입니다.");
     }
 
     try {
@@ -30,9 +36,7 @@ export async function request(path, options = {}) {
 
       headers.set("Authorization", `Bearer ${token}`);
     } catch (e) {
-      localStorage.removeItem("auth");
-      window.location.href = "./login.html";
-      throw new Error("유효하지 않은 인증 정보입니다.");
+      return redirectToLogin("유효하지 않은 인증 정보입니다.");
     }
   }
 
@@ -43,9 +47,7 @@ export async function request(path, options = {}) {
 
   if (!response.ok) {
     if (response.status === 401) {
-      localStorage.removeItem("auth");
-      alert("로그인 시간이 만료되었습니다. 다시 로그인해 주세요.");
-      window.location.href = "./login.html";
+      return redirectToLogin("로그인 시간이 만료되었습니다. 다시 로그인해 주세요.");
     }
 
     const error = await response.json().catch(() => ({}));
