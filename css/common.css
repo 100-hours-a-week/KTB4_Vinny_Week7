@@ -106,8 +106,6 @@ a {
 }
 
 .icon-button {
-  width: 36px;
-  height: 36px;
   border: 0;
   background: transparent;
   display: inline-grid;
@@ -130,7 +128,18 @@ a {
 .profile-menu {
   position: relative;
   display: flex;
+  justify-self: end;
   justify-content: center;
+}
+
+.profile-menu .icon-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+.profile-menu .icon-button:hover {
+  background: transparent;
 }
 
 .site-header__inner--movie .profile-menu {
@@ -324,7 +333,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  min-height: 36px;
   padding: 0 22px;
   border: 0;
   color: var(--color-text-primary);
