@@ -1,4 +1,5 @@
 import { closeDialog, openDialog } from "./common/ui.js";
+import { getAuth } from "./common/auth-storage.js";
 import { movies, reviews } from "./data/movies.js";
 
 const featuredMovie = movies[0];
@@ -35,6 +36,29 @@ let selectedRating = 0;
 let editingReviewId = null;
 let deletingReviewId = null;
 let currentMovieReviews = [];
+let isRedirectingToLogin = false;
+
+function isLoggedIn() {
+  return Boolean(getAuth()?.accessToken);
+}
+
+function redirectToLogin() {
+  if (isRedirectingToLogin) {
+    return;
+  }
+  window.alert("로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.");
+  isRedirectingToLogin = true;
+  window.location.href = "./login.html";
+}
+
+function requireLogin() {
+  if (isLoggedIn()) {
+    return true;
+  }
+
+  redirectToLogin();
+  return false;
+}
 
 function getMovieIdFromUrl() {
   return new URLSearchParams(window.location.search).get("movieId");
@@ -171,6 +195,10 @@ function renderReviews(movie) {
 }
 
 function handleRatingClick(event) {
+  if (!requireLogin()) {
+    return;
+  }
+
   const ratingButton = event.target.closest("[data-rating]");
 
   if (!ratingButton) {
@@ -185,8 +213,20 @@ function updateReviewCount() {
   reviewCount.textContent = `${reviewInput.value.length}/500`;
 }
 
+function handleReviewFocus() {
+  requireLogin();
+}
+
+function handleReviewComposeClick() {
+  requireLogin();
+}
+
 function handleReviewSubmit(event) {
   event.preventDefault();
+
+  if (!requireLogin()) {
+    return;
+  }
 
   if (selectedRating === 0) {
     ratingHelper.textContent = "리뷰를 등록하려면 별점을 먼저 선택해주세요.";
@@ -328,6 +368,8 @@ renderRatingStars(selectedRating);
 updateReviewCount();
 
 ratingStars.addEventListener("click", handleRatingClick);
+reviewForm.addEventListener("click", handleReviewComposeClick);
+reviewInput.addEventListener("focus", handleReviewFocus);
 reviewInput.addEventListener("input", updateReviewCount);
 reviewForm.addEventListener("submit", handleReviewSubmit);
 movieReviewList.addEventListener("click", handleReviewListClick);
