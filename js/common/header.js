@@ -24,26 +24,13 @@ function renderProfileAvatar(header, authSession) {
 }
 
 function createHeader(element) {
-  const backHref = element.getAttribute("back-href");
-  const titleHref = element.getAttribute("title-href");
   const showProfile = element.hasAttribute("show-profile");
   const showSearch = element.hasAttribute("show-search");
   const loginLink = element.getAttribute("login-link");
   const authSession = getAuth();
   const shouldShowProfile = showProfile || Boolean(loginLink && authSession);
   const header = document.createElement("header");
-  const title = titleHref
-    ? `<a class="site-header__title" href="${titleHref}">CINEON</a>`
-    : '<h1 class="site-header__title">CINEON</h1>';
-  const search = showSearch
-    ? `
-      <label class="site-header__search">
-        <span class="visually-hidden">영화 검색</span>
-        <input data-movie-search type="search" placeholder="영화 제목을 검색해보세요" />
-        <span aria-hidden="true">⌕</span>
-      </label>
-    `
-    : "";
+  const title = '<a class="site-header__title" href="./movies.html">CINEON</a>';
   const profileMenu = shouldShowProfile
     ? `
       <nav class="profile-menu" aria-label="프로필 메뉴">
@@ -65,7 +52,6 @@ function createHeader(element) {
     header.innerHTML = `
       <div class="site-header__inner site-header__inner--movie">
         ${title}
-        ${search}
         ${profileMenu}
       </div>
     `;
@@ -78,11 +64,6 @@ function createHeader(element) {
   header.className = "site-header";
   header.innerHTML = `
     <div class="site-header__inner">
-      ${
-        backHref
-          ? `<a class="icon-button" href="${backHref}" aria-label="뒤로가기"><span class="back-icon"></span></a>`
-          : "<div></div>"
-      }
       ${title}
       ${profileMenu}
     </div>

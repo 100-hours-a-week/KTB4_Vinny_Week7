@@ -39,7 +39,7 @@
 
 .movie-hero__title {
   margin: 0 0 12px;
-  font-size: clamp(42px, 7vw, 58px);
+  font-size: clamp(42px, 7vw, 36px);
   line-height: 1;
   letter-spacing: 0;
   color: white;
@@ -405,7 +405,7 @@
 
 .movie-detail-hero__title {
   margin: 0 0 14px;
-  font-size: clamp(34px, 5vw, 46px);
+  font-size: clamp(34px, 5vw, 36px);
   line-height: 1.12;
   color: white;
 }
@@ -426,7 +426,7 @@
 
 .movie-detail-hero__rating span {
   color: var(--color-rating);
-  font-size: 48px;
+  font-size: 40px;
   line-height: 1;
 }
 

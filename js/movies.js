@@ -3,7 +3,6 @@ import { movies } from "./data/movies.js";
 const hero = document.getElementById("featured-movie");
 const movieList = document.getElementById("movie-list");
 const reviewList = document.getElementById("review-list");
-const searchInput = document.querySelector("[data-movie-search]");
 const movieHome = document.querySelector(".movie-home");
 const movieSectionTitle = document.getElementById("popular-movies-title");
 const movieSectionMore = document.querySelector(".movie-section__more");
@@ -206,7 +205,7 @@ function renderMovies(movieItems) {
   if (movieItems.length === 0) {
     const emptyMessage = document.createElement("p");
     emptyMessage.className = "movie-empty";
-    emptyMessage.textContent = "검색 결과가 없습니다.";
+    emptyMessage.textContent = "표시할 영화가 없습니다.";
     movieList.append(emptyMessage);
     return;
   }
@@ -219,22 +218,6 @@ function renderReviews(reviewItems) {
     return;
   }
   reviewList.replaceChildren(...reviewItems.map(createReviewCard));
-}
-
-function handleMovieSearch(event) {
-  const keyword = event.target.value.trim().toLowerCase();
-  const filteredMovies = pageMovies.filter(function(movie) {
-    return [
-      movie.title,
-      movie.originalTitle,
-      movie.genre,
-      movie.releaseYear
-    ].some(function(value) {
-      return value.toLowerCase().includes(keyword);
-    });
-  });
-
-  renderMovies(filteredMovies);
 }
 
 if (isAllMoviesView) {
@@ -257,7 +240,3 @@ if (isAllMoviesView) {
 
 renderMovies(pageMovies);
 renderReviews([]);
-
-if (searchInput) {
-  searchInput.addEventListener("input", handleMovieSearch);
-}

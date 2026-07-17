@@ -58,17 +58,17 @@ a {
   margin: 0 auto;
   padding: 0;
   display: grid;
-  grid-template-columns: 44px 1fr 44px;
+  grid-template-columns: 1fr auto;
   align-items: center;
 }
 
 .site-header__inner--movie {
-  grid-template-columns: auto minmax(220px, 1fr) 88px;
-  gap: clamp(22px, 6vw, 72px);
+  grid-template-columns: 1fr auto;
 }
 
 .site-header__title {
-  text-align: center;
+  justify-self: start;
+  text-align: left;
   font-size: 0;
   font-weight: 900;
   letter-spacing: 0;
@@ -85,43 +85,6 @@ a {
   color: var(--color-action-primary);
   font-size: 25px;
   text-shadow: 0 0 18px rgba(204, 255, 0, .36);
-}
-
-.site-header__search {
-  position: relative;
-  display: block;
-}
-
-.site-header__search input {
-  width: 100%;
-  height: 42px;
-  border: 1px solid rgba(255, 255, 255, .12);
-  border-radius: 6px;
-  padding: 0 46px 0 22px;
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, .06);
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
-}
-
-.site-header__search input::placeholder {
-  color: rgba(245, 247, 251, .46);
-}
-
-.site-header__search input:focus {
-  border-color: var(--color-action-primary);
-  outline: none;
-}
-
-.site-header__search span[aria-hidden="true"] {
-  position: absolute;
-  top: 50%;
-  right: 18px;
-  color: var(--color-text-primary);
-  font-size: 25px;
-  line-height: 1;
-  transform: translateY(-50%);
 }
 
 .site-header__login {
@@ -231,7 +194,7 @@ a {
 
 .section-title {
   margin: 0 0 28px;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   text-align: center;
   letter-spacing: 0;
@@ -499,15 +462,8 @@ dialog.dialog::backdrop {
 
 @media (max-width: 720px) {
   .site-header__inner--movie {
-    grid-template-columns: 1fr 88px;
-    gap: 14px;
+    grid-template-columns: 1fr auto;
     width: min(calc(100% - 40px), var(--content-width));
-    padding: 14px 0;
-  }
-
-  .site-header__inner--movie .site-header__search {
-    grid-column: 1 / -1;
-    grid-row: 2;
   }
 
   .site-header__inner--movie .site-header__login,

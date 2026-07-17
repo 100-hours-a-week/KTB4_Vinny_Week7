@@ -58,7 +58,7 @@ export async function request(path, options = {}) {
 
   const apiResponse = await response.json();
 
-  if (!apiResponse.success) {
+  if (!apiResponse.success && apiResponse.status !== 401) {
     throw new Error(apiResponse.message || "요청에 실패했습니다.");
   }
 

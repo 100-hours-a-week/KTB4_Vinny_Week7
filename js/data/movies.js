@@ -339,5 +339,41 @@ export const reviews = [
     rating: 5.0,
     content: "장면마다 의미가 촘촘하게 박혀 있어서 볼 때마다 새롭게 보이는 영화입니다.",
     createdAt: "어제"
+  },
+  {
+    reviewId: "review-parasite-2",
+    movieId: "parasite",
+    nickname: "봉테일수집가",
+    avatarUrl: "https://i.pravatar.cc/96?img=14",
+    rating: 4.5,
+    content: "웃으면서 보다가 어느 순간 숨이 턱 막히는 영화였어요. 계단과 냄새 같은 디테일이 오래 남습니다.",
+    createdAt: "3시간 전"
+  },
+  {
+    reviewId: "review-parasite-3",
+    movieId: "parasite",
+    nickname: "시네마노트",
+    avatarUrl: "https://i.pravatar.cc/96?img=36",
+    rating: 5.0,
+    content: "장르가 계속 미끄러지듯 바뀌는데도 몰입이 깨지지 않았어요. 각본의 힘이 정말 대단합니다.",
+    createdAt: "6시간 전"
+  },
+  {
+    reviewId: "review-parasite-4",
+    movieId: "parasite",
+    nickname: "장면분석러",
+    avatarUrl: "https://i.pravatar.cc/96?img=52",
+    rating: 4.0,
+    content: "상징이 많지만 과하게 설명하지 않아서 좋았습니다. 보고 난 뒤 같이 이야기할 거리가 많은 영화예요.",
+    createdAt: "2일 전"
+  },
+  {
+    reviewId: "review-parasite-5",
+    movieId: "parasite",
+    nickname: "극장앞좌석",
+    avatarUrl: "https://i.pravatar.cc/96?img=60",
+    rating: 4.5,
+    content: "배우들의 호흡이 너무 자연스러워서 더 섬뜩했어요. 마지막까지 긴장감을 놓기 어렵습니다.",
+    createdAt: "5일 전"
   }
 ];
