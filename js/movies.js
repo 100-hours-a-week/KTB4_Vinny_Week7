@@ -73,7 +73,7 @@ function restartHeroAutoplay() {
   window.clearInterval(heroAutoplayId);
   heroAutoplayId = window.setInterval(function() {
     showHero(getNextHeroIndex(1));
-  }, 5200);
+  }, 4000);
 }
 
 function handleHeroClick(event) {

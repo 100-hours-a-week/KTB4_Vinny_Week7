@@ -426,7 +426,7 @@
 
 .movie-detail-hero__rating span {
   color: var(--color-rating);
-  font-size: 40px;
+  font-size: 36px;
   line-height: 1;
 }
 
@@ -485,12 +485,12 @@
 }
 
 .rating-stars button {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: 0;
   background: transparent;
   color: var(--color-rating);
-  font-size: 38px;
+  font-size: 36px;
   line-height: 1;
   text-align: center;
   text-shadow: 0 1px 0 rgba(9, 17, 29, .08);

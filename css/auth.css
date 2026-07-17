@@ -3,7 +3,7 @@
 }
 
 .auth-shell {
-  width: min(100%, 1120px);
+  width: min(100%, var(--content-width));
   min-height: 660px;
   display: grid;
   grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
@@ -57,7 +57,7 @@
 .auth-form .section-title {
   margin-bottom: 12px;
   text-align: left;
-  font-size: clamp(34px, 4vw, 40px);
+  font-size: clamp(34px, 4vw, 36px);
   line-height: 1.08;
 }
 
@@ -130,7 +130,7 @@
 }
 
 .auth-form--signup .section-title {
-  font-size: clamp(30px, 4vw, 40px);
+  font-size: clamp(30px, 4vw, 36px);
 }
 
 .auth-form--signup .auth-form__summary {
@@ -277,6 +277,10 @@
   background-image: url("https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg");
 }
 
+.auth-poster-panel__track--top span:nth-child(4) {
+  background-image: url("https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg");
+}
+
 .auth-poster-panel__track--bottom span:nth-child(1) {
   background-image: url("https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg");
 }
@@ -287,6 +291,10 @@
 
 .auth-poster-panel__track--bottom span:nth-child(3) {
   background-image: url("https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg");
+}
+
+.auth-poster-panel__track--bottom span:nth-child(4) {
+  background-image: url("https://image.tmdb.org/t/p/w500/6ELJeUH8s0s6nX6I5z5Ak2Xdj7p.jpg");
 }
 
 .auth-poster-panel__copy {
