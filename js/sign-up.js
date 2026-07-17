@@ -28,7 +28,7 @@ function initializeSignUpPage() {
   );
 
   let selectedProfileImageFile = null;
-  let selectedProfileImageUrl = "";
+  let selectedProfileImage = "";
 
   function getSignUpErrors(values) {
     return {
@@ -51,7 +51,7 @@ function initializeSignUpPage() {
       password: values.password,
       passwordConfirm: values.passwordConfirm,
       nickname: values.nickname,
-      profileImageUrl: values.profileImageFile
+      profileImage: values.profileImageFile
     };
   }
 
@@ -108,7 +108,7 @@ function initializeSignUpPage() {
   }
 
   function renderProfileImage(dataUrl) {
-    selectedProfileImageUrl = dataUrl;
+    selectedProfileImage = dataUrl;
     profileImagePreview.src = dataUrl;
     profileImagePreview.hidden = false;
     profileImagePlaceholder.hidden = true;
@@ -124,7 +124,7 @@ function initializeSignUpPage() {
 
     if (!imageFile) {
       selectedProfileImageFile = null;
-      selectedProfileImageUrl = "";
+      selectedProfileImage = "";
       profileImagePreview.removeAttribute("src");
       profileImagePreview.hidden = true;
       profileImagePlaceholder.hidden = false;

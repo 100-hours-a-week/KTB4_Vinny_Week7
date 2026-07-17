@@ -33,9 +33,9 @@ function createReviewElement(reviewData) {
   author.textContent = getAuthorName(reviewData);
   time.textContent = reviewData.createdAt || "";
 
-  if (reviewData.author?.profileImageUrl) {
+  if (reviewData.author?.profileImage) {
     avatar.style.backgroundImage =
-      `url("${reviewData  .author.profileImageUrl}")`;
+      `url("${reviewData  .author.profileImage}")`;
     avatar.style.backgroundPosition = "center";
     avatar.style.backgroundSize = "cover";
   }

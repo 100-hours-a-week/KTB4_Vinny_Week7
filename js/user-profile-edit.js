@@ -18,21 +18,19 @@ import {
 import { getFullImageUrl, setBackgroundImage } from "./utils/image.js";
 
 function createProfileUpdatePayload(
-  userProfile,
   nickname,
-  profileImageUrl
+  profileImageFile
 ) {
   return {
     nickname,
-    profileImageUrl:
-      profileImageUrl || userProfile.profileImageUrl || ""
+    profileImage: profileImageFile
   };
 }
 
 function mergeUserProfile(userProfile, payload, response) {
   return {
     ...userProfile,
-    ...payload,
+    nickname: payload.nickname,
     ...(response ?? {})
   };
 }
@@ -52,14 +50,13 @@ function isProfileFormValid(nickname) {
 async function saveUserProfile(
   userProfile,
   nickname,
-  profileImageUrl
+  profileImageFile
 ) {
   const payload = createProfileUpdatePayload(
-    userProfile,
     nickname,
-    profileImageUrl
+    profileImageFile
   );
-  const response = await updateUserProfile( payload);
+  const response = await updateUserProfile(payload);
 
   return mergeUserProfile(userProfile, payload, response);
 }
@@ -69,11 +66,11 @@ async function withdrawAuthenticatedUser() {
   clearAuthSession();
 }
 
-function updateHeaderAvatar(profileImageUrl) {
+function updateHeaderAvatar(profileImage) {
   const headerAvatar = document.querySelector(".avatar");
 
-  if (headerAvatar && profileImageUrl) {
-    setBackgroundImage(headerAvatar, profileImageUrl);
+  if (headerAvatar && profileImage) {
+    setBackgroundImage(headerAvatar, profileImage);
   }
 }
 
@@ -86,6 +83,7 @@ function initializeUserProfileEditPage() {
   const profileImageInput = document.getElementById("profile-image-input");
   const submitButton = document.getElementById("user-edit-button");
   const successToast = document.getElementById("user-edit-toast");
+  const failToast = document.getElementById("user-edit-fail-toast");
   const withdrawButton = document.getElementById("user-delete-button");
   const withdrawDialog = document.getElementById("user-delete-dialog");
   const withdrawCancelButton = document.getElementById(
@@ -97,7 +95,7 @@ function initializeUserProfileEditPage() {
 
   let loadedUserProfile = null;
   let selectedImageFile = null;
-  let displayImageUrl = null;
+  let displayImage = null;
 
   function updateSubmitButtonState() {
     submitButton.disabled = !isProfileFormValid(nicknameInput.value);
@@ -110,10 +108,14 @@ function initializeUserProfileEditPage() {
   }
 
   function renderProfileImage(imageUrl) {
-    displayImageUrl = imageUrl;
-    const fullUrl = imageUrl && imageUrl.startsWith("/") 
-      ? getFullImageUrl(imageUrl)
-      : imageUrl;
+    displayImage = imageUrl;
+    const fullUrl = getFullImageUrl(imageUrl);
+
+    if (!fullUrl) {
+      profileImageButton.style.removeProperty("background-image");
+      return;
+    }
+
     profileImageButton.style.backgroundImage = `url("${fullUrl}")`;
   }
 
@@ -121,8 +123,8 @@ function initializeUserProfileEditPage() {
     emailText.textContent = userProfile.email || "";
     nicknameInput.value = userProfile.nickname || "";
 
-    if (userProfile.profileImageUrl) {
-      renderProfileImage(userProfile.profileImageUrl);
+    if (userProfile.profileImage) {
+      renderProfileImage(userProfile.profileImage);
     }
 
     updateSubmitButtonState();
@@ -187,7 +189,7 @@ function initializeUserProfileEditPage() {
         selectedImageFile
       );
       renderUserProfile(loadedUserProfile);
-      updateHeaderAvatar(loadedUserProfile.profileImageUrl);
+      updateHeaderAvatar(loadedUserProfile.profileImage);
       showToast(successToast);
       
       const currentAuth = getAuth();
@@ -199,7 +201,7 @@ function initializeUserProfileEditPage() {
         saveUser(updatedAuth);
       }
     } catch (error) {
-      window.alert(error.message);
+      showToast(failToast);
     } finally {
       updateSubmitButtonState();
     }

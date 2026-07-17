@@ -3,7 +3,7 @@ import {
   getPasswordError as getPasswordValidationError
 } from "./utils/validation.js";
 import { setHelperText } from "./common/ui.js";
-import { login } from "./api/user.js";
+import { getUserInfo, login } from "./api/user.js";
 import { saveUser } from "./common/auth-storage.js";
 
 const loginForm = document.getElementById("login-form");
@@ -73,6 +73,13 @@ async function handleLoginSubmit(event) {
       createLoginPayload(emailInput.value, passwordInput.value)
     );
     saveUser(authSession);
+
+    const userProfile = await getUserInfo();
+    saveUser({
+      ...authSession,
+      ...userProfile
+    });
+
     window.location.href = "./movies.html";
   } catch (error) {
     alert(error.message);

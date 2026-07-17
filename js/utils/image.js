@@ -7,6 +7,7 @@ import { API_BASE_URL } from "../api/api.js";
 
 export function getFullImageUrl(imageUrl) {
   if (!imageUrl) return "";
+  if (typeof imageUrl !== "string") return "";
   
   if (imageUrl.startsWith("http")) return imageUrl;
   

@@ -3,24 +3,18 @@ import { clearAuthSession, getAuth } from "./auth-storage.js";
 import { getFullImageUrl, setBackgroundImage } from "../utils/image.js";
 
 function getProfileImageUrl(authSession) {
-  const imageUrl =
-    authSession?.profileImageUrl ||
-    authSession?.user?.profileImageUrl ||
-    authSession?.userProfile?.profileImageUrl ||
-    "";
-  
-  return getFullImageUrl(imageUrl);
+  return getFullImageUrl(authSession?.profileImage || "");
 }
 
 function renderProfileAvatar(header, authSession) {
   const avatar = header.querySelector(".avatar");
-  const profileImageUrl = getProfileImageUrl(authSession);
+  const profileImage = getProfileImageUrl(authSession);
 
-  if (!avatar || !profileImageUrl) {
+  if (!avatar) {
     return;
   }
 
-  setBackgroundImage(avatar, profileImageUrl);
+  setBackgroundImage(avatar, profileImage);
 }
 
 function createHeader(element) {

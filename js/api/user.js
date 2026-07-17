@@ -7,7 +7,7 @@ function createUserFormData(payload) {
   formData.append("password", payload.password);
   formData.append("passwordConfirm", payload.passwordConfirm);
   formData.append("nickname", payload.nickname);
-  payload.profileImageUrl && formData.append("profileImageUrl", payload.profileImageUrl);
+  payload.profileImage && formData.append("profileImage", payload.profileImage);
 
   return formData;
 }
@@ -17,10 +17,10 @@ function updateUserFormData(payload) {
 
   formData.append("nickname", payload.nickname);
   
-  if (payload.profileImageUrl instanceof File) {
-    formData.append("profileImageUrl", payload.profileImageUrl);
-  } else if (payload.profileImageUrl && typeof payload.profileImageUrl === 'string') {
-    formData.append("profileImageUrl", payload.profileImageUrl);
+  if (payload.profileImage instanceof File) {
+    formData.append("profileImage", payload.profileImage);
+  } else if (payload.profileImage && typeof payload.profileImage === "string") {
+    formData.append("profileImage", payload.profileImage);
   }
 
   return formData;
