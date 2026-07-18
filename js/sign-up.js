@@ -28,7 +28,6 @@ function initializeSignUpPage() {
   );
 
   let selectedProfileImageFile = null;
-  let selectedProfileImage = "";
 
   function getSignUpErrors(values) {
     return {
@@ -108,7 +107,6 @@ function initializeSignUpPage() {
   }
 
   function renderProfileImage(dataUrl) {
-    selectedProfileImage = dataUrl;
     profileImagePreview.src = dataUrl;
     profileImagePreview.hidden = false;
     profileImagePlaceholder.hidden = true;
@@ -124,7 +122,6 @@ function initializeSignUpPage() {
 
     if (!imageFile) {
       selectedProfileImageFile = null;
-      selectedProfileImage = "";
       profileImagePreview.removeAttribute("src");
       profileImagePreview.hidden = true;
       profileImagePlaceholder.hidden = false;

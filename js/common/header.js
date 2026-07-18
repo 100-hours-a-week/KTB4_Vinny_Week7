@@ -19,7 +19,7 @@ function renderProfileAvatar(header, authSession) {
 
 function createHeader(element) {
   const showProfile = element.hasAttribute("show-profile");
-  const showSearch = element.hasAttribute("show-search");
+  const isMovieHeader = element.hasAttribute("movie-header");
   const loginLink = element.getAttribute("login-link");
   const authSession = getAuth();
   const shouldShowProfile = showProfile || Boolean(loginLink && authSession);
@@ -41,7 +41,7 @@ function createHeader(element) {
       ? `<a class="site-header__login btn btn--primary btn--rounded" href="${loginLink}">로그인</a>`
       : "<div></div>";
 
-  if (showSearch) {
+  if (isMovieHeader) {
     header.className = "site-header";
     header.innerHTML = `
       <div class="site-header__inner site-header__inner--movie">

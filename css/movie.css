@@ -168,17 +168,6 @@
   margin-top: 6px;
 }
 
-.movie-section--reviews::before {
-  content: "";
-  position: absolute;
-  inset: -34px -24px -48px;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 8% 0, rgba(204, 255, 0, .045), transparent 22rem),
-    radial-gradient(circle at 92% 10%, rgba(132, 176, 214, .045), transparent 20rem);
-}
-
 .movie-section__header {
   display: flex;
   align-items: center;
@@ -255,86 +244,6 @@
   color: var(--color-rating);
   font-size: 13px;
   font-weight: 800;
-}
-
-.review-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
-}
-
-.review-card {
-  min-width: 0;
-  padding: 20px 20px 18px;
-  border: 1px solid rgba(255, 255, 255, .08);
-  border-radius: 8px;
-  background: var(--color-surface-default);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, .24);
-}
-
-.review-card__header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.review-card__avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: var(--color-surface-subtle);
-}
-
-.review-card__user {
-  display: grid;
-  gap: 6px;
-}
-
-.review-card__content {
-  min-height: 58px;
-  margin: 0 0 18px;
-  color: var(--color-text-primary);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.7;
-  word-break: keep-all;
-}
-
-.review-card__movie {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.review-card__movie img {
-  width: 58px;
-  height: 82px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.review-card__movie div {
-  display: grid;
-  gap: 8px;
-}
-
-.review-card__movie strong {
-  font-size: 15px;
-}
-
-.review-card__movie span {
-  color: var(--color-text-muted);
-  font-size: 13px;
-}
-
-.review-card__footer {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 12px;
-  font-weight: 700;
 }
 
 .movie-empty {
@@ -716,10 +625,6 @@
 @media (max-width: 860px) {
   .movie-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .review-grid {
-    grid-template-columns: 1fr;
   }
 
   .movie-detail-hero,

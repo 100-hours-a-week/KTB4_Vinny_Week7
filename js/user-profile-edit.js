@@ -95,7 +95,6 @@ function initializeUserProfileEditPage() {
 
   let loadedUserProfile = null;
   let selectedImageFile = null;
-  let displayImage = null;
 
   function updateSubmitButtonState() {
     submitButton.disabled = !isProfileFormValid(nicknameInput.value);
@@ -108,7 +107,6 @@ function initializeUserProfileEditPage() {
   }
 
   function renderProfileImage(imageUrl) {
-    displayImage = imageUrl;
     const fullUrl = getFullImageUrl(imageUrl);
 
     if (!fullUrl) {

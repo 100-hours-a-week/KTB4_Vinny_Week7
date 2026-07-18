@@ -2,7 +2,6 @@ import { movies } from "./data/movies.js";
 
 const hero = document.getElementById("featured-movie");
 const movieList = document.getElementById("movie-list");
-const reviewList = document.getElementById("review-list");
 const movieHome = document.querySelector(".movie-home");
 const movieSectionTitle = document.getElementById("popular-movies-title");
 const movieSectionMore = document.querySelector(".movie-section__more");
@@ -11,12 +10,6 @@ const isAllMoviesView = searchParams.get("view") === "all";
 const heroMovies = movies.slice(0, 5);
 const mainMovies = movies.slice(5, 10);
 const pageMovies = isAllMoviesView ? movies : mainMovies;
-const movieById = new Map([
-  ...movies.map(function(movie) {
-    return [movie.movieId, movie];
-  })
-]);
-
 let activeHeroIndex = 0;
 let heroStartX = 0;
 let heroPointerId = null;
@@ -151,54 +144,6 @@ function createMovieCard(movie) {
 
   return card;
 }
-
-function createReviewCard(review) {
-  const movie = movieById.get(review.movieId);
-  const card = document.createElement("article");
-  const header = document.createElement("div");
-  const avatar = document.createElement("img");
-  const userInfo = document.createElement("div");
-  const nickname = document.createElement("strong");
-  const body = document.createElement("p");
-  const moviePreview = document.createElement("div");
-  const poster = document.createElement("img");
-  const movieInfo = document.createElement("div");
-  const movieTitle = document.createElement("strong");
-  const movieYear = document.createElement("span");
-  const footer = document.createElement("p");
-
-  card.className = "review-card";
-  header.className = "review-card__header";
-  avatar.className = "review-card__avatar";
-  avatar.src = review.avatarUrl;
-  avatar.alt = `${review.nickname} 프로필`;
-  avatar.loading = "lazy";
-  userInfo.className = "review-card__user";
-  nickname.textContent = review.nickname;
-  userInfo.append(nickname, createStarRating(review.rating));
-  header.append(avatar, userInfo);
-
-  body.className = "review-card__content";
-  body.textContent = review.content;
-
-  moviePreview.className = "review-card__movie";
-  poster.src = movie.posterUrl;
-  poster.alt = `${movie.title} 포스터`;
-  poster.loading = "lazy";
-  movieTitle.textContent = movie.title;
-  movieYear.textContent = movie.releaseYear;
-  movieInfo.append(movieTitle, movieYear);
-  moviePreview.append(poster, movieInfo);
-
-  footer.className = "review-card__footer";
-  footer.textContent =
-    `${review.createdAt}`;
-
-  card.append(header, body, moviePreview, footer);
-
-  return card;
-}
-
 function renderMovies(movieItems) {
   movieList.replaceChildren();
 
@@ -211,13 +156,6 @@ function renderMovies(movieItems) {
   }
 
   movieList.append(...movieItems.map(createMovieCard));
-}
-
-function renderReviews(reviewItems) {
-  if (!reviewList) {
-    return;
-  }
-  reviewList.replaceChildren(...reviewItems.map(createReviewCard));
 }
 
 if (isAllMoviesView) {
@@ -239,4 +177,3 @@ if (isAllMoviesView) {
 }
 
 renderMovies(pageMovies);
-renderReviews([]);
