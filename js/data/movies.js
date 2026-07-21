@@ -51,7 +51,7 @@ export const movies = [
     rating: 4.8,
     ratingCount: 18524,
     reviewCount: 1574,
-    posterUrl: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+    posterUrl: "https://image.tmdb.org/t/p/original/oAt6OtpwYCdJI76AVtVKW1eorYx.jpg",
     backdropUrl: "https://image.tmdb.org/t/p/original/kXfqcdQKsToO0OUXHcrrNCHDBzO.jpg",
     description: "누명을 쓰고 수감된 은행가 앤디가 감옥 안에서 희망을 잃지 않고 자유를 향해 나아간다."
   },
@@ -65,7 +65,7 @@ export const movies = [
     rating: 4.7,
     ratingCount: 14207,
     reviewCount: 1308,
-    posterUrl: "https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg",
+    posterUrl: "https://image.tmdb.org/t/p/original/2DJCufz3Oa703PbLjNX1pM6MCG2.jpg",
     backdropUrl: "https://image.tmdb.org/t/p/original/mMtUybQ6hL24FXo0F3Z4j2KG7kZ.jpg",
     description: "서로의 몸이 뒤바뀌는 신비한 경험을 하게 된 두 소년 소녀가 시간과 거리를 넘어 서로를 찾아간다."
   },
