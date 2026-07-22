@@ -214,9 +214,6 @@ function initializeUserProfileEditPage() {
   });
 
   async function handleWithdrawConfirm() {
-
-    closeDialog(withdrawDialog, "confirm");
-
     try {
       await withdrawAuthenticatedUser();
       closeDialog(withdrawDialog, "confirm");

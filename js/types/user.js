@@ -41,7 +41,7 @@
 
 /**
  * @typedef {Object} UserLoginResponse
- * @property {string} token
+ * @property {string} accessToken
  * @property {string} userId
  */
 

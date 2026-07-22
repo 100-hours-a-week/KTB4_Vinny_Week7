@@ -100,7 +100,7 @@ export function initializeReview({
   const reviewSubmitButton = document.getElementById(
     "review-submit-button"
   );
-  const reviewList = document.getElementById("review-list");
+  const reviewList = document.getElementById("movie-review-list");
   const reviewDeleteDialog = document.getElementById(
     "review-delete-dialog"
   );
@@ -110,6 +110,7 @@ export function initializeReview({
 
   let editingReview = null;
   let deletingReview = null;
+  let currentReviewCount = 0;
 
   function updateButtonState() {
     reviewSubmitButton.disabled = reviewInput.value.trim() === "";
@@ -151,6 +152,7 @@ export function initializeReview({
     try {
       const response = await getReviews(reviewId);
       renderReviewList(getReviewList(response));
+      currentReviewCount = Number(response?.reviewCount) || 0;
     } catch (error) {
       reviewList.textContent = error.message;
     }
@@ -179,9 +181,14 @@ async function handleReviewSubmit(event) {
 
       if (responseData) {
         renderReviewList(getReviewList(responseData));
-        
+
         if (responseData.reviewCount !== undefined) {
-          onReviewCountChange(responseData.reviewCount - parseInt(document.getElementById('review-count')?.innerText || 0)); 
+          const nextReviewCount = Number(responseData.reviewCount);
+
+          if (Number.isFinite(nextReviewCount)) {
+            onReviewCountChange(nextReviewCount - currentReviewCount);
+            currentReviewCount = nextReviewCount;
+          }
         }
       }
 
@@ -227,6 +234,7 @@ async function handleReviewSubmit(event) {
 
       deletingReview.remove();
       deletingReview = null;
+      currentReviewCount = Math.max(0, currentReviewCount - 1);
       onReviewCountChange(-1);
       closeDialog(reviewDeleteDialog, "confirm");
     } catch (error) {
