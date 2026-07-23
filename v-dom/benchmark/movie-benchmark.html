@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VDOM 영화 목록 벤치마크 | CINEON</title>
+  <link rel="stylesheet" href="../../css/colors.css" />
+  <link rel="stylesheet" href="../../css/common.css" />
+  <link rel="stylesheet" href="./movie-benchmark.css" />
+</head>
+<body>
+  <main class="benchmark">
+    <header class="benchmark__header">
+      <p class="benchmark__eyebrow">CINEON LAB</p>
+      <h1>영화 목록 렌더링 비교</h1>
+      <p>
+        동일한 영화 목록 변경을 전체 <code>mount</code>와 VDOM
+        <code>patch</code>로 각각 30회 실행합니다.
+      </p>
+    </header>
+
+    <section class="benchmark-controls" aria-label="벤치마크 설정">
+      <label>
+        영화 수
+        <select id="item-count">
+          <option value="100">100개</option>
+          <option value="500" selected>500개</option>
+          <option value="1000">1,000개</option>
+        </select>
+      </label>
+
+      <button type="button" data-operation="update">중간 카드 1개 수정</button>
+      <button type="button" data-operation="rotate">첫 카드를 마지막으로 이동</button>
+      <button type="button" data-operation="reverse">목록 순서 뒤집기</button>
+      <button type="button" data-operation="remove">20% 삭제</button>
+    </section>
+
+    <p id="benchmark-status" class="benchmark-status" aria-live="polite">
+      비교할 작업을 선택해주세요.
+    </p>
+
+    <section class="benchmark-results" aria-label="측정 결과">
+      <article class="result-card">
+        <h2>전체 mount</h2>
+        <dl>
+          <div><dt>중앙값</dt><dd id="mount-median">-</dd></div>
+          <div><dt>상위 95%</dt><dd id="mount-p95">-</dd></div>
+          <div><dt>평균 영향 노드 수</dt><dd id="mount-mutations">-</dd></div>
+        </dl>
+      </article>
+
+      <article class="result-card result-card--accent">
+        <h2>VDOM patch</h2>
+        <dl>
+          <div><dt>중앙값</dt><dd id="patch-median">-</dd></div>
+          <div><dt>상위 95%</dt><dd id="patch-p95">-</dd></div>
+          <div><dt>평균 영향 노드 수</dt><dd id="patch-mutations">-</dd></div>
+        </dl>
+      </article>
+    </section>
+
+    <section class="benchmark-previews" aria-label="렌더링 결과 미리보기">
+      <article>
+        <h2>전체 mount 결과</h2>
+        <div id="mount-target" class="benchmark-movie-grid"></div>
+      </article>
+      <article>
+        <h2>VDOM patch 결과</h2>
+        <div id="patch-target" class="benchmark-movie-grid"></div>
+      </article>
+    </section>
+
+    <aside class="benchmark-note">
+      측정값은 브라우저와 실행 환경에 따라 달라집니다. DevTools를 닫은 상태에서
+      여러 번 실행하고 중앙값을 비교하세요.
+    </aside>
+  </main>
+
+  <script type="module" src="./movie-benchmark.js"></script>
+</body>
+</html>
