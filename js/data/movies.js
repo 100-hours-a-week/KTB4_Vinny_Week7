@@ -221,7 +221,7 @@ export const movies = [
     reviewCount: 1523,
     posterUrl: "https://image.tmdb.org/t/p/original/uitqZVbhvlQV5iLOdbk3itGoNNd.jpg",
     backdropUrl: "https://image.tmdb.org/t/p/original/3aAV0sWY3NowjZP0OwWTIV4Z7vB.jpg",
-    description: "포유류 도시 주토피아에서 펼쳐지는 신나는 모험과 미스터리."
+    description: "동물만 사는 도시 주토피아에서 펼쳐지는 신나는 모험과 미스터리."
   },
   {
     movieId: "parasite",
@@ -269,6 +269,46 @@ export const movies = [
 
 export const reviews = [
   {
+    reviewId: "review-interstellar-1",
+    movieId: "interstellar",
+    nickname: "영화좋아",
+    avatarUrl: "https://i.pravatar.cc/96?img=47",
+    rating: 4.5,
+    content: "스토리와 연출, 음악까지 완벽한 조화였어요. 시간이 지나도 다시 꺼내 보고 싶은 영화입니다.",
+    createdAt: "2시간 전"
+  },  {
+    reviewId: "review-interstellar-1",
+    movieId: "interstellar",
+    nickname: "영화좋아",
+    avatarUrl: "https://i.pravatar.cc/96?img=47",
+    rating: 4.5,
+    content: "스토리와 연출, 음악까지 완벽한 조화였어요. 시간이 지나도 다시 꺼내 보고 싶은 영화입니다.",
+    createdAt: "2시간 전"
+  },  {
+    reviewId: "review-interstellar-1",
+    movieId: "interstellar",
+    nickname: "영화좋아",
+    avatarUrl: "https://i.pravatar.cc/96?img=47",
+    rating: 4.5,
+    content: "스토리와 연출, 음악까지 완벽한 조화였어요. 시간이 지나도 다시 꺼내 보고 싶은 영화입니다.",
+    createdAt: "2시간 전"
+  },  {
+    reviewId: "review-interstellar-1",
+    movieId: "interstellar",
+    nickname: "영화좋아",
+    avatarUrl: "https://i.pravatar.cc/96?img=47",
+    rating: 4.5,
+    content: "스토리와 연출, 음악까지 완벽한 조화였어요. 시간이 지나도 다시 꺼내 보고 싶은 영화입니다.",
+    createdAt: "2시간 전"
+  },  {
+    reviewId: "review-interstellar-1",
+    movieId: "interstellar",
+    nickname: "영화좋아",
+    avatarUrl: "https://i.pravatar.cc/96?img=47",
+    rating: 4.5,
+    content: "스토리와 연출, 음악까지 완벽한 조화였어요. 시간이 지나도 다시 꺼내 보고 싶은 영화입니다.",
+    createdAt: "2시간 전"
+  },  {
     reviewId: "review-interstellar-1",
     movieId: "interstellar",
     nickname: "영화좋아",
