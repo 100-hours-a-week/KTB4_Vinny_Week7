@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,89 +9,94 @@
   <link rel="stylesheet" href="./css/common.css" />
   <link rel="stylesheet" href="./css/user.css" />
 </head>
+
 <body>
   <div class="page">
     <site-header show-profile></site-header>
 
-    <main class="main">
-      <section class="user-form" aria-labelledby="user-edit-title">
-        <h1 id="user-edit-title" class="section-title">회원정보수정</h1>
+    <main class="main main--settings">
+      <div class="settings-layout">
+        <aside class="settings-sidebar" aria-label="회원정보 관리 메뉴">
+          <div class="settings-profile">
+            <span class="settings-profile__avatar" data-settings-avatar aria-hidden="true"></span>
+            <div class="settings-profile__text">
+              <strong data-settings-nickname>회원</strong>
+              <span data-settings-email></span>
+            </div>
+          </div>
+          <nav class="settings-nav">
+            <a class="settings-nav__item is-active" href="./user-profile-edit.html" aria-current="page">
+              <span aria-hidden="true">●</span>회원 정보 수정
+            </a>
+            <a class="settings-nav__item" href="./user-password-edit.html">
+              <span aria-hidden="true">◆</span>비밀번호 변경
+            </a>
+          </nav>
+          <div class="settings-nav settings-nav--account">
+            <button class="settings-nav__item" type="button" data-settings-logout>
+              <span aria-hidden="true">↗</span>로그아웃
+            </button>
+            <button class="settings-nav__item settings-nav__item--danger" type="button"
+              data-dialog-open="user-delete-dialog">
+              <span aria-hidden="true">×</span>회원 탈퇴
+            </button>
+          </div>
+        </aside>
 
-        <div class="profile-preview">
-          <strong class="profile-preview__label required">프로필 사진 *</strong>
-          <p id="profile-image-helper-text" class="helper"></p>
-          <input
-            id="profile-image-input"
-            class="profile-preview__input"
-            type="file"
-            accept="image/*" />
-          <button
-            id="profile-preview-image"
-            class="profile-preview__image"
-            type="button"
-            aria-label="프로필 이미지 변경">
-            <span class="profile-preview__overlay">변경</span>
-          </button>
-        </div>
+        <section class="settings-content" aria-labelledby="user-edit-title">
+          <header class="settings-content__header">
+            <p class="settings-content__eyebrow">ACCOUNT SETTINGS</p>
+            <h1 id="user-edit-title" class="section-title">회원 정보 수정</h1>
+            <p>프로필 이미지와 서비스에서 사용할 닉네임을 관리하세요.</p>
+          </header>
 
-        <form id="user-profile-edit-form" class="form">
-          <div class="form-group">
-            <span class="label">이메일</span>
-            <p id="user-email" class="readonly-text">startupcode@gmail.com</p>
+          <div class="profile-preview">
+            <div>
+              <strong class="profile-preview__label required">프로필 사진</strong>
+              <span class="profile-preview__hint">JPG, PNG 등의 이미지 파일을 사용할 수 있습니다.</span>
+              <p id="profile-image-helper-text" class="helper"></p>
+            </div>
+            <input id="profile-image-input" class="profile-preview__input" type="file" accept="image/*" />
+            <button id="profile-preview-image" class="profile-preview__image" type="button" aria-label="프로필 이미지 변경">
+              <span class="profile-preview__overlay">변경</span>
+            </button>
           </div>
-          <div class="form-group">
-            <label class="label" for="nickname">닉네임</label>
-            <input class="input" id="nickname" type="text" placeholder="닉네임을 입력해주세요." />
-            <p id="nickname-helper-text" class="helper"></p>
-          </div>
-          <div class="user-actions">
-            <button
-              id="user-edit-button"
-              class="btn btn--primary btn--square"
-              type="submit"
-              disabled>수정하기</button>
-            <button 
-              id="user-delete-button"
-              class="btn btn--ghost btn--wide"
-              type="button"
-              data-dialog-open="user-delete-dialog">회원 탈퇴</button>
-          </div>
-        </form>
-      </section>
+
+          <form id="user-profile-edit-form" class="form settings-form">
+            <div class="form-group">
+              <span class="label">이메일</span>
+              <p id="user-email" class="readonly-text">startupcode@gmail.com</p>
+            </div>
+            <div class="form-group">
+              <label class="label" for="nickname">닉네임</label>
+              <input class="input" id="nickname" type="text" placeholder="닉네임을 입력해주세요." />
+              <p id="nickname-helper-text" class="helper"></p>
+            </div>
+            <div class="user-actions">
+              <button id="user-edit-button" class="btn btn--primary btn--square" type="submit" disabled>변경사항 저장</button>
+            </div>
+          </form>
+        </section>
+      </div>
     </main>
   </div>
 
-  <dialog
-    id="user-delete-dialog"
-    class="dialog"
-    aria-labelledby="user-delete-title">
+  <dialog id="user-delete-dialog" class="dialog" aria-labelledby="user-delete-title">
     <h2 id="user-delete-title" class="dialog__title">회원탈퇴 하시겠습니까?</h2>
-    <p class="dialog__text">작성된 리뷰와 댓글은 삭제됩니다.</p>
+    <p class="dialog__text">작성된 리뷰는 삭제 되지 않습니다.</p>
     <div class="dialog__actions">
-      <button
-        id="user-delete-cancel-button"
-        class="btn btn--dark btn--wide btn--rounded"
-        type="button">취소</button>
-      <button
-        id="user-delete-confirm-button"
-        class="btn btn--primary btn--wide btn--rounded"
-        type="button">확인</button>
+      <button id="user-delete-cancel-button" class="btn btn--dark btn--wide btn--rounded" type="button">취소</button>
+      <button id="user-delete-confirm-button" class="btn btn--primary btn--wide btn--rounded" type="button">확인</button>
     </div>
   </dialog>
 
-  <div
-    id="user-edit-toast"
-    class="toast"
-    role="status"
-    aria-live="polite">수정완료</div>
+  <div id="user-edit-toast" class="toast" role="status" aria-live="polite">수정완료</div>
 
-  <div
-    id="user-edit-fail-toast"
-    class="toast toast--error"
-    role="alert"
-    aria-live="assertive">수정실패</div>
+  <div id="user-edit-fail-toast" class="toast toast--error" role="alert" aria-live="assertive">수정실패</div>
 
   <script type="module" src="./js/common/header.js"></script>
+  <script type="module" src="./js/common/user-settings.js"></script>
   <script type="module" src="./js/user-profile-edit.js"></script>
 </body>
+
 </html>

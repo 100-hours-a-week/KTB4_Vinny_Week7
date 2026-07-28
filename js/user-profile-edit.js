@@ -84,7 +84,9 @@ function initializeUserProfileEditPage() {
   const submitButton = document.getElementById("user-edit-button");
   const successToast = document.getElementById("user-edit-toast");
   const failToast = document.getElementById("user-edit-fail-toast");
-  const withdrawButton = document.getElementById("user-delete-button");
+  const withdrawButtons = document.querySelectorAll(
+    '[data-dialog-open="user-delete-dialog"]'
+  );
   const withdrawDialog = document.getElementById("user-delete-dialog");
   const withdrawCancelButton = document.getElementById(
     "user-delete-cancel-button"
@@ -205,8 +207,10 @@ function initializeUserProfileEditPage() {
     }
   }
 
-  withdrawButton.addEventListener("click", function() {
-    openDialog(withdrawDialog);
+  withdrawButtons.forEach(function(withdrawButton) {
+    withdrawButton.addEventListener("click", function() {
+      openDialog(withdrawDialog);
+    });
   });
 
   withdrawCancelButton.addEventListener("click", function() {
@@ -231,6 +235,10 @@ function initializeUserProfileEditPage() {
   withdrawDialog.addEventListener("close", function() {
     document.body.classList.remove("modal-open");
   });
+
+  if (new URLSearchParams(window.location.search).get("withdraw") === "1") {
+    openDialog(withdrawDialog);
+  }
 
   loadUserProfile();
 }
